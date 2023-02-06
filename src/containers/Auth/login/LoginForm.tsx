@@ -1,23 +1,16 @@
-import * as Yup from 'yup';
-import { useState } from 'react';
-import { Link as RouterLink, useHistory } from 'react-router-dom';
-// form
-import { useForm } from 'react-hook-form';
-// @mui
-import { Link, Stack, Alert, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-// routes
-// hooks
-// components
-import Iconify from '../../../components/Iconify';
+import { Alert, IconButton, InputAdornment, Link, Stack } from '@mui/material';
+import { useState } from 'react';
+import AppleSignin from 'react-apple-signin-auth';
+import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
+import * as Yup from 'yup';
+
 import { FormProvider, RHFTextField } from '../../../components/hook-form';
 import { RHFCheckbox } from 'src/hooks/RHFCheckbox';
-import { useDispatch } from 'react-redux';
-import AppleSignin from 'react-apple-signin-auth';
-import axios from 'axios';
-import { appleAuthHelpers } from 'react-apple-signin-auth';
-
-// ----------------------------------------------------------------------
+import CookieHandlerInstance from 'src/utils/cookie';
+import Iconify from '../../../components/Iconify';
 
 type FormValuesProps = {
   email: string;
@@ -27,8 +20,6 @@ type FormValuesProps = {
 };
 
 export default function LoginForm() {
-
-  const dispatch = useDispatch()
 
   const history = useHistory();
 
@@ -66,18 +57,10 @@ export default function LoginForm() {
     }
   };
 
-  const handleLogin = async () => {
-    try {
-      const headers = {
-        "Content-Type": "application/json",
-      };
-      const data = await axios.get(`https://appleid.apple.com/auth/authorize?client_id=B4FK658ZHJ.com.domainname.appname.side&redirect_uri=https://cd70-171-252-130-52.ngrok.io/login&response_type=code id_token&state=&scope=email name&response_mode=form_post`,{
-        headers
-      })
-      console.log('data', data);
-
-    } catch (error) {
-      console.log('error', error);
+  const handleLogin = (response) => {
+    if (response.authorization.id_token) {
+      CookieHandlerInstance.setCookie('token', response.authorization.id_token);
+      history.push('/')
     }
   }
 
@@ -103,24 +86,25 @@ export default function LoginForm() {
           }}
         />
       </Stack>
+      <div>or</div>
       <AppleSignin
-        /** Auth options passed to AppleID.auth.init() */
         authOptions={{
           clientId: 'B4FK658ZHJ.com.domainname.appname.side',
           scope: 'email name',
-          redirectURI: 'https://cd70-171-252-130-52.ngrok.io/login',
+          redirectURI: 'https://d6c6-116-110-245-130.ngrok.io/login',
           state: '',
           nonce: 'nonce',
           usePopup: true,
         }}
-        /** General props */
-        uiType="light"
-        /** className */
+        uiType="dark"
         className="apple-auth-btn"
+        noDefaultStyle={false}
+        buttonExtraChildren="Continue with Apple"
+        onSuccess={(response) => handleLogin(response)}
+        onError={(error) => console.error(error)}
+        skipScript={false}
+        iconProp={{ style: { marginTop: '10px' } }}
       />
-
-      <button onClick={handleLogin}>Login</button>
-
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
         <RHFCheckbox name="remember" label="Remember me" />

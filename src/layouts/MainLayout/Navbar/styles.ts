@@ -3,8 +3,7 @@ import { makeStyles } from "@mui/styles";
 const useStyles = makeStyles(() => ({
   root: {
     width: '100%',
-    display: 'flex',
-    justifyContent: 'center'
+    marginTop: 20
   },
   listItem: {
     color: 'rgb(99, 115, 129)',
