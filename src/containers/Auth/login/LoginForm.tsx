@@ -57,7 +57,7 @@ export default function LoginForm() {
     }
   };
 
-  const handleLogin = (response) => {
+  const handleLogin = (response: any) => {
     if (response.authorization.id_token) {
       CookieHandlerInstance.setCookie('token', response.authorization.id_token);
       history.push('/')
@@ -100,8 +100,8 @@ export default function LoginForm() {
         className="apple-auth-btn"
         noDefaultStyle={false}
         buttonExtraChildren="Continue with Apple"
-        onSuccess={(response) => handleLogin(response)}
-        onError={(error) => console.error(error)}
+        onSuccess={(response: any) => handleLogin(response)}
+        onError={(error: any) => console.error(error)}
         skipScript={false}
         iconProp={{ style: { marginTop: '10px' } }}
       />

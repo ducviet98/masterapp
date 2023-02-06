@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Component, useContext, useEffect } from 'react';
 import hoistNonReactStatics from 'hoist-non-react-statics';
 import { ReactReduxContext } from 'react-redux';

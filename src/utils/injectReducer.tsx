@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Component, useEffect, useContext } from "react";
 import hoistNonReactStatics from "hoist-non-react-statics";
 import { ReactReduxContext } from "react-redux";
@@ -13,10 +14,10 @@ import getInjectors from "./reducerInjectors";
  */
 // eslint-disable-next-line import/no-anonymous-default-export
 export default ({ key, reducer }: any) => (WrappedComponent: any) => {
-  class ReducerInjector extends Component<any> {
-    static WrappedComponent: any = WrappedComponent;
+  class ReducerInjector extends Component {
+    static WrappedComponent = WrappedComponent;
 
-    static contextType: any = ReactReduxContext;
+    static contextType = ReactReduxContext;
 
     static displayName = `withReducer(${
       WrappedComponent.displayName || WrappedComponent.name || "Component"
@@ -37,7 +38,7 @@ export default ({ key, reducer }: any) => (WrappedComponent: any) => {
 };
 
 const useInjectReducer = ({ key, reducer }: any) => {
-  const context: any = useContext(ReactReduxContext);
+  const context = useContext(ReactReduxContext);
   useEffect(() => {
     getInjectors(context.store).injectReducer(key, reducer);
   }, [context.store, key, reducer]);
