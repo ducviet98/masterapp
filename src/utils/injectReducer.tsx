@@ -13,8 +13,8 @@ import getInjectors from "./reducerInjectors";
  */
 // eslint-disable-next-line import/no-anonymous-default-export
 export default ({ key, reducer }: any) => (WrappedComponent: any) => {
-  class ReducerInjector extends Component {
-    static WrappedComponent = WrappedComponent;
+  class ReducerInjector extends Component<any> {
+    static WrappedComponent: any = WrappedComponent;
 
     static contextType: any = ReactReduxContext;
 
@@ -37,7 +37,7 @@ export default ({ key, reducer }: any) => (WrappedComponent: any) => {
 };
 
 const useInjectReducer = ({ key, reducer }: any) => {
-  const context = useContext(ReactReduxContext);
+  const context: any = useContext(ReactReduxContext);
   useEffect(() => {
     getInjectors(context.store).injectReducer(key, reducer);
   }, [context.store, key, reducer]);
