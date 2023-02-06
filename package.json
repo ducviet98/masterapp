@@ -22,6 +22,7 @@
     "@types/react-router-dom": "^5.1.7",
     "@types/webpack-env": "^1.16.0",
     "clsx": "^1.1.1",
+    "crypto-browserify": "^3.12.0",
     "cryptr": "4.0.2",
     "date-fns": "^2.29.3",
     "formik": "^2.2.9",
@@ -47,7 +48,7 @@
     "react-redux": "^7.2.4",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^5.0.1",
+    "react-scripts": "4.0.3",
     "recompose": "^0.30.0",
     "redux": "^4.1.0",
     "redux-persist": "^6.0.0",
@@ -60,7 +61,7 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "react-scripts --openssl-legacy-provider start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

@@ -21,7 +21,7 @@ import createReducer from '../reducers';
 // const persistedReducer = persistReducer(persistConfig, createReducer);
 
 export default function configureStore(initialState = {}, history: any) {
-  let composeEnhancers = compose;
+  let composeEnhancers : any = compose;
   const reduxSagaMonitorOptions = {};
 
   // If Redux Dev Tools and Saga Dev Tools Extensions are installed, enable them
@@ -49,7 +49,7 @@ export default function configureStore(initialState = {}, history: any) {
   // 2. routerMiddleware: Syncs the location/URL path to the state
   const middlewares = [sagaMiddleware, routerMiddleware(history)];
 
-  const enhancers = [applyMiddleware(...middlewares)];
+  const enhancers: any = [applyMiddleware(...middlewares)];
 
   const store = createStore(
     createReducer(),

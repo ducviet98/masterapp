@@ -15,7 +15,7 @@ class AxiosClient {
     }
 
     this.axiosClient = axios.create({
-      baseURL: 'https://stg.api.domotix.ae',
+      baseURL: '',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
