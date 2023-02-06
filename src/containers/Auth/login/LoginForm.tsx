@@ -91,7 +91,7 @@ export default function LoginForm() {
         authOptions={{
           clientId: 'B4FK658ZHJ.com.domainname.appname.side',
           scope: 'email name',
-          redirectURI: 'https://d6c6-116-110-245-130.ngrok.io/login',
+          redirectURI: window.location.href,
           state: '',
           nonce: 'nonce',
           usePopup: true,
