@@ -11,11 +11,12 @@ import getInjectors from "./reducerInjectors";
  * @param {function} reducer A reducer that will be injected
  *
  */
+// eslint-disable-next-line import/no-anonymous-default-export
 export default ({ key, reducer }: any) => (WrappedComponent: any) => {
   class ReducerInjector extends Component {
     static WrappedComponent = WrappedComponent;
 
-    static contextType = ReactReduxContext;
+    static contextType: any = ReactReduxContext;
 
     static displayName = `withReducer(${
       WrappedComponent.displayName || WrappedComponent.name || "Component"
