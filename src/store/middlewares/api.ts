@@ -1,7 +1,6 @@
-import { refreshTokenRequest } from "src/containers/Auth/login/store/actions";
+import { refreshTokenRequest } from 'src/containers/Auth/store/actions';
 
-import * as types from 'src/containers/Auth/login/store/constants';
-
+import * as types from 'src/containers/Auth/store/constants';
 
 let previousActions: any = [];
 

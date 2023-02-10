@@ -1,5 +1,5 @@
 import { AuthLayout } from 'src/layouts';
-import { LoginPage } from '../pages';
+import { LoginPage, RegisterPage } from '../pages';
 
 const authRoute = [
   {
@@ -11,7 +11,15 @@ const authRoute = [
     permission: [],
     exact: true,
   },
+  {
+    path: '/register',
+    title: 'Register',
+    route: RegisterPage,
+    layout: AuthLayout,
+    roles: [],
+    permission: [],
+    exact: true,
+  },
 ];
-
 
 export default authRoute;

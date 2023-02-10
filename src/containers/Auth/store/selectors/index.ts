@@ -13,8 +13,4 @@ const makeSelectAuthenticated = () =>
 const makeSelectErrors = () =>
   createSelector(authState, (state) => state.errors);
 
-export {
-  makeSelectIsLoading,
-  makeSelectAuthenticated,
-  makeSelectErrors
-};
+export { makeSelectIsLoading, makeSelectAuthenticated, makeSelectErrors };

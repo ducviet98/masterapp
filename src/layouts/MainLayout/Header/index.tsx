@@ -18,12 +18,11 @@ import {
 } from '@mui/material';
 
 import { drawerWidth } from '..';
-import { logoutRequest } from 'src/containers/Auth/login/store/actions';
+import { logoutRequest } from 'src/containers/Auth/store/actions';
 import { useInjectReducer } from 'src/utils/injectReducer';
 import { useInjectSaga } from 'src/utils/injectSaga';
-import reducer from '../../../containers/Auth/login/store/reducer';
-import saga from '../../../containers/Auth/login/store/sagas';
-
+import reducer from '../../../containers/Auth/store/reducer';
+import saga from '../../../containers/Auth/store/sagas';
 
 import { useStyles } from './styles';
 

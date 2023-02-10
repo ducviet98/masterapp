@@ -1,13 +1,13 @@
-import * as types from "../constants";
+import * as types from '../constants';
 import produce from 'immer';
 
 export const initialState = {
   authenticated: false,
   isLoading: false,
-  errors: ''
+  errors: '',
 };
 
-const loginReduce = (state = initialState, { type, payload }: any) =>
+const authReducer = (state = initialState, { type, payload }: any) =>
   produce(state, (draft) => {
     switch (type) {
       case types.LOGIN_REQUEST:
@@ -24,10 +24,21 @@ const loginReduce = (state = initialState, { type, payload }: any) =>
         draft.authenticated = false;
         draft.errors = payload.data;
         break;
+
+      case types.REGISTER_REQUEST:
+        draft.isLoading = true;
+        break;
+      case types.REGISTER_SUCCESS:
+        draft.isLoading = false;
+        draft.errors = '';
+        break;
+      case types.REGISTER_FAIL:
+        draft.isLoading = false;
+        draft.errors = payload.data;
+        break;
       default:
         break;
     }
   });
 
-export default loginReduce;
-
+export default authReducer;
