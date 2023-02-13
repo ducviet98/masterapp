@@ -1,27 +1,41 @@
 import clsx from 'clsx';
 import { Link, useLocation } from 'react-router-dom';
-import { AccountBox as AccountBoxIcon, Category as CategoryIcon, Home as HomeIcon, Quiz as QuizIcon, SupportAgent as SupportAgentIcon, EditNotifications as EditNotificationsIcon } from '@mui/icons-material';
-import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack } from '@mui/material';
-// import { IconLogo } from 'src/components/icons';
+import {
+  Home as HomeIcon,
+  AccountBox as AccountBoxIcon,
+} from '@mui/icons-material';
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from '@mui/material';
+
+import { path } from 'src/constants/path';
 
 import { useStyles } from './styles';
-
 
 const MenuHeader = [
   {
     title: 'Dashboard',
-    path: '/',
-    icon: <HomeIcon />
+    path: path.home,
+    icon: <HomeIcon />,
   },
-]
+  {
+    title: 'User Device',
+    path: path.userDevice,
+    icon: <AccountBoxIcon />,
+  },
+];
 
 export default function Navbar() {
-
   const { pathname } = useLocation();
   const classes = useStyles();
 
   return (
-    <div style={{ paddingLeft: 16 }}>
+    <>
       <div className={classes.root}>
         <Box
           component="img"
@@ -30,22 +44,24 @@ export default function Navbar() {
         />
       </div>
       <List className={classes.list}>
-        {MenuHeader.map((item, index) => (
-          <ListItem className={clsx(classes.listItem, {
-            [classes.itemSelected]: pathname === item.path
-          })} component={Link} to={item.path} key={index} disablePadding selected={pathname === item.path}>
+        {MenuHeader?.map((item, index) => (
+          <ListItem
+            className={clsx(classes.listItem, {
+              [classes.itemSelected]: pathname === item.path,
+            })}
+            component={Link}
+            to={item.path}
+            key={index}
+            disablePadding
+            selected={pathname === item.path}
+          >
             <ListItemButton>
-              <ListItemIcon>
-                {item.icon}
-              </ListItemIcon>
+              <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.title} />
             </ListItemButton>
           </ListItem>
         ))}
       </List>
-    </div>
+    </>
   );
 }
-
-
-

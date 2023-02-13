@@ -1,12 +1,12 @@
 import { path } from 'src/constants/path';
+import UserDevice from 'src/pages/UserDevicePage';
 import { AuthenticatedRoute } from '../components/routes';
-import { DashboardPage } from '../pages';
 
-const homeRoute = [
+const userDeviceRoute = [
   {
-    path: path.home,
-    title: 'Dashboard',
-    component: DashboardPage,
+    path: path.userDevice,
+    title: 'User Device',
+    component: UserDevice,
     route: AuthenticatedRoute,
     roles: [],
     permission: [],
@@ -14,4 +14,4 @@ const homeRoute = [
   },
 ];
 
-export default homeRoute;
+export default userDeviceRoute;

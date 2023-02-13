@@ -3,12 +3,10 @@ import { BrowserRouter, Switch } from 'react-router-dom';
 
 import dashboardRoutes from './dashboardRoutes';
 import authRoute from './authRoutes';
+import userDeviceRoutes from './userDeviceRoutes';
 import { MainLayout } from '../layouts';
 
-const routes = [
-  ...dashboardRoutes,
-  ...authRoute,
-];
+const routes = [...dashboardRoutes, ...authRoute, ...userDeviceRoutes];
 
 const RenderRouter = ({
   route: Component,
