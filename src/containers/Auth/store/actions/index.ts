@@ -1,23 +1,44 @@
 import * as types from '../constants';
 
-export const loginRequest = (data) => {
+export const registerRequest = (data: any) => {
+  return {
+    type: types.REGISTER_REQUEST,
+    payload: data,
+  };
+};
+
+export const registerSuccess = (data: any) => {
+  return {
+    type: types.REGISTER_SUCCESS,
+    payload: data,
+  };
+};
+
+export const registerFail = (data: any) => {
+  return {
+    type: types.REGISTER_FAIL,
+    payload: data,
+  };
+};
+
+export const loginRequest = (data: any) => {
   return {
     type: types.LOGIN_REQUEST,
-    payload: { data },
+    payload: data,
   };
 };
 
-export const loginSuccess = (data) => {
+export const loginSuccess = (data: any) => {
   return {
     type: types.LOGIN_SUCCESS,
-    payload: { data },
+    payload: data,
   };
 };
 
-export const loginFail = (data) => {
+export const loginFail = (data: any) => {
   return {
     type: types.LOGIN_FAIL,
-    payload: { data },
+    payload: data,
   };
 };
 
@@ -35,7 +56,7 @@ export const logoutSuccess = () => {
 
 export const logoutFail = () => {
   return {
-    type: types.LOGOUT_FAIL
+    type: types.LOGOUT_FAIL,
   };
 };
 
@@ -53,7 +74,6 @@ export const refreshTokenSuccess = () => {
 
 export const refreshTokenFail = () => {
   return {
-    type: types.REFRESH_TOKEN_FAIL
+    type: types.REFRESH_TOKEN_FAIL,
   };
 };
-

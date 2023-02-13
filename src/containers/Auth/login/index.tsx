@@ -4,19 +4,20 @@ import { Link as RouterLink } from 'react-router-dom';
 
 import Image from 'src/components/Logo';
 import Page from 'src/components/Page';
+import { path } from 'src/constants/path';
 import useResponsive from 'src/hooks/useResponsive';
 import { useInjectReducer } from 'src/utils/injectReducer';
 import { useInjectSaga } from 'src/utils/injectSaga';
 import LoginForm from './LoginForm';
-import reducer from './store/reducer';
-import saga from './store/sagas';
+import reducer from '../store/reducer';
+import saga from '../store/sagas';
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     display: 'flex',
   },
-}));;
+}));
 
 const SectionStyle = styled(Card)(({ theme }) => ({
   width: '100%',
@@ -38,11 +39,8 @@ const ContentStyle = styled('div')(({ theme }) => ({
 }));
 
 export default function Login() {
-
   useInjectReducer({ key: 'auth', reducer });
   useInjectSaga({ key: 'auth', saga });
-
-  const smUp = useResponsive('up', 'sm');
 
   const mdUp = useResponsive('up', 'md');
 
@@ -70,19 +68,23 @@ export default function Login() {
                 <Typography variant="h4" gutterBottom>
                   Sign in to Master
                 </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>Enter your details below.</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>
+                  Enter your details below.
+                </Typography>
               </Box>
             </Stack>
             <LoginForm />
 
-            {!smUp && (
-              <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-                Don’t have an account?{' '}
-                <Link variant="subtitle2" component={RouterLink} to={'register'}>
-                  Get started
-                </Link>
-              </Typography>
-            )}
+            <Typography variant="body2" align="center" sx={{ mt: 3 }}>
+              Don’t have an account?{' '}
+              <Link
+                variant="subtitle2"
+                component={RouterLink}
+                to={path.register}
+              >
+                Get started
+              </Link>
+            </Typography>
           </ContentStyle>
         </Container>
       </RootStyle>
