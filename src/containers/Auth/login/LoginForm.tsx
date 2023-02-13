@@ -1,7 +1,6 @@
 import { LoadingButton } from '@mui/lab';
 import { IconButton, InputAdornment, Link, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
-import AppleSignin from 'react-apple-signin-auth';
 import { useForm } from 'react-hook-form';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
@@ -11,7 +10,6 @@ import omit from 'lodash/omit';
 
 import { FormProvider, RHFTextField } from 'src/components/hook-form';
 import { RHFCheckbox } from 'src/hooks/RHFCheckbox';
-import CookieHandlerInstance from 'src/utils/cookie';
 import Iconify from 'src/components/Iconify';
 import { makeSelectIsLoading } from '../store/selectors';
 import { userSchema, UserSchema } from 'src/utils/rules';
@@ -43,10 +41,6 @@ function LoginForm({ isLoading }: IUserType) {
     }
   };
 
-  useEffect(() => {
-    getRemember();
-  }, []);
-
   const methods = useForm<FormData>({
     resolver: yupResolver(loginSchema),
     defaultValues: {
@@ -63,14 +57,6 @@ function LoginForm({ isLoading }: IUserType) {
     formState: {},
   } = methods;
 
-  useEffect(() => {
-    if (remember) {
-      setValue('email', remember.email);
-      setValue('password', remember.password);
-      setValue('isRemember', remember.isRemember);
-    }
-  }, [remember, setValue]);
-
   const onSubmit = handleSubmit((data: FormData) => {
     const body = omit(data, ['isRemember']);
 
@@ -85,12 +71,17 @@ function LoginForm({ isLoading }: IUserType) {
     );
   });
 
-  const handleLogin = (response: any) => {
-    if (response.authorization.id_token) {
-      CookieHandlerInstance.setCookie('token', response.authorization.id_token);
-      history.push(path.home);
+  useEffect(() => {
+    getRemember();
+  }, []);
+
+  useEffect(() => {
+    if (remember) {
+      setValue('email', remember.email);
+      setValue('password', remember.password);
+      setValue('isRemember', remember.isRemember);
     }
-  };
+  }, [remember, setValue]);
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -117,24 +108,6 @@ function LoginForm({ isLoading }: IUserType) {
           }}
         />
       </Stack>
-      <div>or</div>
-      <AppleSignin
-        authOptions={{
-          clientId: 'B4FK658ZHJ.com.domainname.appname.side',
-          scope: 'email name',
-          redirectURI: window.location.href,
-          state: '',
-          nonce: 'nonce',
-          usePopup: true,
-        }}
-        uiType="dark"
-        className="apple-auth-btn"
-        noDefaultStyle={false}
-        buttonExtraChildren="Continue with Apple"
-        onSuccess={(response: any) => handleLogin(response)}
-        onError={(error: any) => console.error(error)}
-        skipScript={false}
-      />
 
       <Stack
         direction="row"

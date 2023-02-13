@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -21,6 +21,8 @@ import { drawerWidth } from '..';
 import { logoutRequest } from 'src/containers/Auth/store/actions';
 import { useInjectReducer } from 'src/utils/injectReducer';
 import { useInjectSaga } from 'src/utils/injectSaga';
+import CookieHandlerInstance from 'src/utils/cookie';
+
 import reducer from '../../../containers/Auth/store/reducer';
 import saga from '../../../containers/Auth/store/sagas';
 
@@ -48,8 +50,10 @@ const Header = ({ matches, handleDrawerToggle }) => {
 
   const open = Boolean(anchorEl);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     dispatch(logoutRequest());
+    await CookieHandlerInstance.removeCookie('token');
+    await CookieHandlerInstance.removeCookie('refreshToken');
   };
 
   return (

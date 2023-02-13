@@ -25,6 +25,7 @@ import Image from 'src/components/Logo';
 import Page from 'src/components/Page';
 import useResponsive from 'src/hooks/useResponsive';
 import { path } from 'src/constants/path';
+
 import reducer from '../store/reducer';
 import saga from '../store/sagas';
 import { registerRequest } from '../store/actions';
@@ -78,10 +79,10 @@ function RegisterContainer({ isLoading }: IUserType) {
         ...data,
         callback: () => {
           history.push(path.login);
+          reset();
         },
       })
     );
-    reset();
   });
 
   return (

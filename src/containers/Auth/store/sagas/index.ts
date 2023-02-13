@@ -18,7 +18,11 @@ function* registerSaga({ payload }: any) {
     toast.success('Register Successfully !');
     yield payload.callback();
   } catch (error: any) {
-    toast.error(error?.data.email[0] || error?.data.message);
+    if (error?.data.detail) {
+      toast.error(error?.data.detail);
+    } else {
+      toast.error(error?.data.email[0]);
+    }
     yield put(actionTypes.registerFail(payload));
   }
 }
