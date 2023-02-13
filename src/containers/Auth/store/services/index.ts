@@ -1,16 +1,21 @@
 import AxiosClientInstance from 'src/utils/axios';
 
 export const loginService = async (data: {
-  username: string;
+  email: string;
   password: string;
 }) => {
-  return await AxiosClientInstance.post(`/admin/login`, data);
+  return await AxiosClientInstance.post(`/api/auth/login`, data);
 };
 
 export const registerService = async (data: {
-  username: string;
+  first_name: string;
+  last_name: string
   email: string;
   password: string;
 }) => {
   return await AxiosClientInstance.post(`/api/auth/register`, data);
+};
+
+export const refreshTokenService = async (data: { refresh: string }) => {
+  return await AxiosClientInstance.post(`/api/auth/refresh-token`, data);
 };

@@ -7,7 +7,7 @@ import {
   InputAdornment,
   Stack,
 } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
 import { useState } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -25,30 +25,41 @@ import Image from 'src/components/Logo';
 import Page from 'src/components/Page';
 import useResponsive from 'src/hooks/useResponsive';
 import { path } from 'src/constants/path';
-
 import reducer from '../store/reducer';
 import saga from '../store/sagas';
 import { registerRequest } from '../store/actions';
 import { makeSelectIsLoading } from '../store/selectors';
-import { IUserType } from '../Interface';
 import { ContentStyle, HeaderStyle, RootStyle, SectionStyle } from './styles';
 
-type FormData = Pick<UserSchema, 'email' | 'username' | 'password'>;
-const registerSchema = userSchema.pick(['email', 'username', 'password']);
+type FormData = Pick<
+  UserSchema,
+  'first_name' | 'last_name' | 'email' | 'password'
+>;
+const registerSchema = userSchema.pick([
+  'first_name',
+  'last_name',
+  'email',
+  'password',
+]);
 
-function RegisterContainer({ isLoading, navigation }: IUserType) {
+interface IUserType {
+  isLoading?: boolean;
+}
+
+function RegisterContainer({ isLoading }: IUserType) {
   const smUp = useResponsive('up', 'sm');
   const mdUp = useResponsive('up', 'md');
   useInjectReducer({ key: 'auth', reducer });
   useInjectSaga({ key: 'auth', saga });
-
+  const history = useHistory();
   const dispatch = useDispatch();
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const methods = useForm<FormData>({
     resolver: yupResolver(registerSchema),
     defaultValues: {
-      username: '',
+      first_name: '',
+      last_name: '',
       email: '',
       password: '',
     },
@@ -57,6 +68,7 @@ function RegisterContainer({ isLoading, navigation }: IUserType) {
   const {
     handleSubmit,
     reset,
+    // eslint-disable-next-line no-empty-pattern
     formState: {},
   } = methods;
 
@@ -65,7 +77,7 @@ function RegisterContainer({ isLoading, navigation }: IUserType) {
       registerRequest({
         ...data,
         callback: () => {
-          navigation?.navigate(path.login);
+          history.push(path.login);
         },
       })
     );
@@ -118,8 +130,8 @@ function RegisterContainer({ isLoading, navigation }: IUserType) {
             <FormProvider methods={methods} onSubmit={onSubmit}>
               <Stack spacing={3}>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                  <RHFTextField name="username" label="First name" />
-                  <RHFTextField name="username" label="Last name" />
+                  <RHFTextField name="first_name" label="First name" />
+                  <RHFTextField name="last_name" label="Last name" />
                 </Stack>
 
                 <RHFTextField name="email" label="Email address" />

@@ -1,9 +1,10 @@
+import { path } from 'src/constants/path';
 import { AuthLayout } from 'src/layouts';
-import { LoginPage, RegisterPage } from '../pages';
+import { LoginPage, RegisterPage, DashboardPage } from '../pages';
 
 const authRoute = [
   {
-    path: '/login',
+    path: path.login,
     title: 'Login',
     route: LoginPage,
     layout: AuthLayout,
@@ -12,9 +13,18 @@ const authRoute = [
     exact: true,
   },
   {
-    path: '/register',
+    path: path.register,
     title: 'Register',
     route: RegisterPage,
+    layout: AuthLayout,
+    roles: [],
+    permission: [],
+    exact: true,
+  },
+  {
+    path: path.home,
+    title: 'Dashboard',
+    route: DashboardPage,
     layout: AuthLayout,
     roles: [],
     permission: [],

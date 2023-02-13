@@ -10,7 +10,7 @@ export const registerRequest = (data: any) => {
 export const registerSuccess = (data: any) => {
   return {
     type: types.REGISTER_SUCCESS,
-    payload: data.message,
+    payload: data,
   };
 };
 
@@ -21,24 +21,24 @@ export const registerFail = (data: any) => {
   };
 };
 
-export const loginRequest = (data) => {
+export const loginRequest = (data: any) => {
   return {
     type: types.LOGIN_REQUEST,
-    payload: { data },
+    payload: data,
   };
 };
 
-export const loginSuccess = (data) => {
+export const loginSuccess = (data: any) => {
   return {
     type: types.LOGIN_SUCCESS,
-    payload: { data },
+    payload: data,
   };
 };
 
-export const loginFail = (data) => {
+export const loginFail = (data: any) => {
   return {
     type: types.LOGIN_FAIL,
-    payload: { data },
+    payload: data,
   };
 };
 

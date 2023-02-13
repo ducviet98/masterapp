@@ -42,8 +42,6 @@ export default function Login() {
   useInjectReducer({ key: 'auth', reducer });
   useInjectSaga({ key: 'auth', saga });
 
-  const smUp = useResponsive('up', 'sm');
-
   const mdUp = useResponsive('up', 'md');
 
   return (
