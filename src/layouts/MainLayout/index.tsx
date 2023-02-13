@@ -1,12 +1,5 @@
-import {
-  Box,
-  CssBaseline,
-  Drawer,
-  Toolbar,
-  useMediaQuery,
-} from '@mui/material';
-import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
-import React from 'react';
+import { Box, CssBaseline, Drawer, Toolbar } from '@mui/material';
+import React, { useCallback, useState } from 'react';
 
 import { useInjectReducer } from 'src/utils/injectReducer';
 import { useInjectSaga } from 'src/utils/injectSaga';
@@ -14,10 +7,9 @@ import Header from './Header';
 import Navbar from './Navbar';
 import saga from 'src/containers/Auth/store/sagas';
 import reducer from 'src/containers/Auth/store/reducer';
-import { useStyles } from './styles';
-// import breakpoints from 'src/theme/breakpoints'
-import { useTheme } from '@mui/material/styles';
 import useResponsive from 'src/hooks/useResponsive';
+
+import { useStyles } from './styles';
 
 export const drawerWidth = 240;
 
@@ -27,25 +19,26 @@ interface Props {
 
 function Layout(props: Props) {
   const clx = useStyles();
-  const theme = useTheme();
   useInjectSaga({ key: 'auth', saga });
   useInjectReducer({ key: 'auth', reducer });
+  const isDesktop = useResponsive('up', 'md');
 
   const { children } = props;
 
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = useState<boolean>(false);
 
-  const handleDrawerToggle = () => {
+  const handleDrawerToggle = useCallback(() => {
     setMobileOpen(!mobileOpen);
-  };
-
-  const isMobile = useResponsive('down', 'sm');
+  }, [mobileOpen]);
 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <Header matches={isMobile} handleDrawerToggle={handleDrawerToggle} />
-      {!isMobile && (
+      <Header
+        matches={!isDesktop}
+        handleDrawerToggle={() => handleDrawerToggle()}
+      />
+      {isDesktop && (
         <Box
           component="nav"
           sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
@@ -70,7 +63,11 @@ function Layout(props: Props) {
           </Drawer>
         </Box>
       )}
-      <Drawer anchor="left" open={mobileOpen} onClose={handleDrawerToggle}>
+      <Drawer
+        anchor="left"
+        open={mobileOpen}
+        onClose={() => handleDrawerToggle()}
+      >
         <Navbar />
       </Drawer>
       <Box
@@ -78,7 +75,7 @@ function Layout(props: Props) {
         sx={{
           flexGrow: 1,
           p: 3,
-          width: { sm: isMobile ? '100%' : `calc(100% - ${drawerWidth}px)` },
+          width: { sm: isDesktop ? '100%' : `calc(100% - ${drawerWidth}px)` },
         }}
         className={clx.mainContainer}
       >

@@ -1,9 +1,7 @@
-import HomeContainer from "../../containers/Dashboard";
+import DashboardContainer from 'src/containers/Dashboard';
 
-interface Props { }
-
-function Home(props: Props) {
-  return <HomeContainer />;
+function Dashboard() {
+  return <DashboardContainer />;
 }
 
-export default Home;
+export default Dashboard;
