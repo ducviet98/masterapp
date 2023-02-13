@@ -3,6 +3,8 @@ import { toast } from 'react-toastify';
 
 import AxiosClientInstance from 'src/utils/axios';
 import CookieHandlerInstance from 'src/utils/cookie';
+import { path } from 'src/constants/path';
+
 import * as actionTypes from '../actions';
 import * as types from '../constants';
 import {
@@ -66,7 +68,9 @@ function* refreshTokenSaga() {
 
 function* logoutSaga() {
   try {
-    window.location.replace('/login');
+    window.location.replace(path.login);
+    CookieHandlerInstance.removeCookie('token');
+    CookieHandlerInstance.removeCookie('refreshToken');
     yield put(actionTypes.logoutSuccess());
   } catch (error: any) {
     yield put(actionTypes.logoutFail());

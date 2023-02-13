@@ -21,7 +21,6 @@ import { drawerWidth } from '..';
 import { logoutRequest } from 'src/containers/Auth/store/actions';
 import { useInjectReducer } from 'src/utils/injectReducer';
 import { useInjectSaga } from 'src/utils/injectSaga';
-import CookieHandlerInstance from 'src/utils/cookie';
 
 import reducer from '../../../containers/Auth/store/reducer';
 import saga from '../../../containers/Auth/store/sagas';
@@ -50,10 +49,8 @@ const Header = ({ matches, handleDrawerToggle }) => {
 
   const open = Boolean(anchorEl);
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     dispatch(logoutRequest());
-    await CookieHandlerInstance.removeCookie('token');
-    await CookieHandlerInstance.removeCookie('refreshToken');
   };
 
   return (
