@@ -68,9 +68,9 @@ function* refreshTokenSaga() {
 
 function* logoutSaga() {
   try {
-    window.location.replace(path.login);
     CookieHandlerInstance.removeCookie('token');
     CookieHandlerInstance.removeCookie('refreshToken');
+    window.location.replace(path.login);
     yield put(actionTypes.logoutSuccess());
   } catch (error: any) {
     yield put(actionTypes.logoutFail());
