@@ -24,7 +24,7 @@ const MenuHeader = [
     icon: <HomeIcon />,
   },
   {
-    title: 'User Device',
+    title: 'Devices',
     path: path.userDevice,
     icon: <AccountBoxIcon />,
   },

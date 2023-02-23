@@ -19,10 +19,22 @@ const makeSelectUserDevice = () =>
 const makeSelectListDevice = () =>
   createSelector(userDeviceState, (state) => state.listDevice);
 
+const makeSelectListCategories = () =>
+  createSelector(userDeviceState, (state) => state.categories);
+
+const makeSelectListBrands = () =>
+  createSelector(userDeviceState, (state) => state.brands);
+
+const makeSelectListStatus = () =>
+  createSelector(userDeviceState, (state) => state.status);
+
 export {
   makeSelectIsLoading,
   makeSelectErrors,
   makeSelectTotalUsers,
   makeSelectUserDevice,
   makeSelectListDevice,
+  makeSelectListCategories,
+  makeSelectListBrands,
+  makeSelectListStatus
 };

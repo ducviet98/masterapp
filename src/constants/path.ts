@@ -3,4 +3,5 @@ export const path = {
   login: '/login',
   register: '/register',
   userDevice: '/user-device',
+  newDevice: '/user-device/new',
 };

@@ -11,3 +11,10 @@ export interface DeviceUser {
   createdAt: string;
   updatedAt: string;
 }
+
+export type ParamsType = {
+  page: number,
+  rowsPerPage: number,
+  search: string,
+  ordering: string
+}
