@@ -18,5 +18,7 @@ export const registerService = async (data: {
 };
 
 export const refreshTokenService = async (data: { refresh: string }) => {
-  return await AxiosClientInstance.post(`/api/auth/refresh-token`, data);
+  return await AxiosClientInstance.post(`/api/auth/refresh-token`, {
+    refresh: data
+  });
 };

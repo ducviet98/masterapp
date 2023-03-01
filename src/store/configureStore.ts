@@ -12,6 +12,8 @@ import createSagaMiddleware from 'redux-saga';
 // import { persistStore, persistReducer } from 'redux-persist';
 
 import createReducer from '../reducers';
+import authenticateMiddleware from './middlewares/api';
+
 
 // const persistConfig = {
 //   key: 'notifications',
@@ -49,7 +51,7 @@ export default function configureStore(initialState = {}, history: any) {
   // Create the store with two middlewares
   // 1. sagaMiddleware: Makes redux-sagas work
   // 2. routerMiddleware: Syncs the location/URL path to the state
-  const middlewares = [sagaMiddleware, routerMiddleware(history)];
+  const middlewares = [sagaMiddleware, authenticateMiddleware, routerMiddleware(history)];
 
   const enhancers: any = [applyMiddleware(...middlewares)];
 

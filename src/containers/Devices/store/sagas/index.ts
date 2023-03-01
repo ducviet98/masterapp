@@ -19,7 +19,7 @@ function* getUserDeviceSaga({ payload }: any) {
     const { data } = yield call(getUserDeviceService, payload);
     yield put(actionTypes.getUserDeviceSuccess(data));
   } catch (error: any) {
-    yield put(actionTypes.getUserDeviceFail(payload));
+    yield put(actionTypes.getUserDeviceFail(error));
   }
 }
 
@@ -28,7 +28,7 @@ function* getCategoriesSaga({ payload }: any) {
     const { data } = yield call(getCategoriesService);
     yield put(actionTypes.getCategoriesSuccess(data));
   } catch (error: any) {
-    yield put(actionTypes.getCategoriesFail(payload));
+    yield put(actionTypes.getCategoriesFail(error));
   }
 }
 

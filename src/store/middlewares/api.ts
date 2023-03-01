@@ -1,7 +1,6 @@
-/* eslint-disable no-console */
 
-
-
+import { refreshTokenRequest } from 'src/containers/Auth/store/actions';
+import * as types from 'src/containers/Auth/store/constants';
 let previousActions: any = [];
 
 const authenticateMiddleware = (store: any) => (next: any) => (action: any) => {
@@ -19,12 +18,12 @@ const authenticateMiddleware = (store: any) => (next: any) => (action: any) => {
 
     if (statusCode === 401 || statusCode === 403) {
       previousActions.push(action);
-      // store.dispatch(refreshTokenRequest());
+      store.dispatch(refreshTokenRequest());
     }
   }
 
   if (
-
+    actionType === types.REFRESH_TOKEN_SUCCESS &&
     previousActions.length > 0
   ) {
     previousActions.forEach((previousAction: any) => {

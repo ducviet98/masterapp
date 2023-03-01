@@ -58,10 +58,10 @@ function* refreshTokenSaga() {
   try {
     const refreshToken = CookieHandlerInstance.getCookie('refreshToken');
     const {
-      data: { token },
+      data: { access },
     } = yield call(refreshTokenService, refreshToken);
-    CookieHandlerInstance.setCookie('token', token);
-    AxiosClientInstance.setHeader(token);
+    CookieHandlerInstance.setCookie('token', access);
+    AxiosClientInstance.setHeader(access);
     yield put(actionTypes.refreshTokenSuccess());
   } catch (error) {
     CookieHandlerInstance.removeCookie('token');

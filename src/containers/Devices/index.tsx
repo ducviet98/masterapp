@@ -1,29 +1,28 @@
+import AddIcon from '@mui/icons-material/Add';
+import { Button, Grid, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
-import AddIcon from '@mui/icons-material/Add';
-import { Button, Grid, Typography } from '@mui/material';
-
 import HeaderBreadcrumbs from 'src/components/HeaderBreadcrumbs';
+import Label from 'src/components/Label';
 import { TableComp } from 'src/components/table';
-import { usePagination } from 'src/hooks/usePagination';
 import { DeviceUser } from 'src/containers/Devices/interface';
+import { usePagination } from 'src/hooks/usePagination';
 import { useInjectReducer } from 'src/utils/injectReducer';
 import { useInjectSaga } from 'src/utils/injectSaga';
+import { MenuUserAction } from './components/MenuUserAction';
 import { headersTable } from './constants';
-import { getUserDeviceRequest, deleteDeviceRequest } from './store/actions';
+import { deleteDeviceRequest, getUserDeviceRequest } from './store/actions';
 import reducer from './store/reducer';
 import saga from './store/sagas';
 import {
   makeSelectIsLoading,
   makeSelectListDevice,
   makeSelectTotalUsers,
-  makeSelectUserDevice,
+  makeSelectUserDevice
 } from './store/selectors';
-import { MenuUserAction } from './components/MenuUserAction';
-import Label from 'src/components/Label';
 
 interface IUserDeviceType {
   isLoading?: boolean;
