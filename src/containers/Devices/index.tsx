@@ -93,6 +93,7 @@ const UserDeviceContainer = ({
     navigate(`/devices/${id}/edit`);
   };
 
+  
   useEffect(() => {
     dispatch(
       getUserDeviceRequest({
