@@ -9,9 +9,10 @@ const getIcon = (name: string) => (
 
 const ICONS = {
   user: getIcon('ic_user'),
-  ecommerce: getIcon('ic_ecommerce'),
+  devices: getIcon('ic_device'),
   analytics: getIcon('ic_analytics'),
   dashboard: getIcon('ic_dashboard'),
+  certificates: getIcon('ic_certificate'),
 };
 
 const navConfig = [
@@ -19,7 +20,8 @@ const navConfig = [
     subheader: 'Menu',
     items: [
       { title: 'App', path: '/app', icon: ICONS.dashboard },
-      { title: 'devices', path: '/devices', icon: ICONS.ecommerce },
+      { title: 'devices', path: '/devices', icon: ICONS.devices },
+      { title: 'certificates', path: '/certificates', icon: ICONS.certificates },
     ],
   }
 ];

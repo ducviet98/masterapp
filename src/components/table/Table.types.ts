@@ -28,4 +28,5 @@ export interface ITable {
   selectItemTable?: (value: number) => void;
   onClickItem?: (value: any) => void;
   onChangePage?: (id: string) => void;
+  actionSelect?: React.ReactNode
 }

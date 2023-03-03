@@ -30,7 +30,7 @@ interface IUserDeviceType {
   total: number;
 }
 
-const UserDeviceContainer = ({
+const DeviceContainer = ({
   isLoading,
   listDevice,
   total,
@@ -93,7 +93,6 @@ const UserDeviceContainer = ({
     navigate(`/devices/${id}/edit`);
   };
 
-  
   useEffect(() => {
     dispatch(
       getUserDeviceRequest({
@@ -107,7 +106,7 @@ const UserDeviceContainer = ({
   return (
     <>
       <HeaderBreadcrumbs
-        heading="User List"
+        heading="Devices"
         links={[
           { name: 'Dashboard', href: '/' },
           { name: 'Devices', href: '/devices' },
@@ -119,7 +118,7 @@ const UserDeviceContainer = ({
             to={'/devices/new'}
             startIcon={<AddIcon />}
           >
-            New User
+            Add Devices
           </Button>
         }
       />
@@ -148,4 +147,4 @@ const mapStateToProps = createStructuredSelector({
   total: makeSelectTotalUsers(),
 });
 
-export default connect(mapStateToProps)(UserDeviceContainer);
+export default connect(mapStateToProps)(DeviceContainer);

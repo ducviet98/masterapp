@@ -72,5 +72,5 @@ export type ParamsType = {
   page: number,
   rowsPerPage: number,
   search: string,
-  ordering: string
+  ordering?: string
 }
