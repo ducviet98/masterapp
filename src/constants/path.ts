@@ -5,5 +5,8 @@ export const path = {
   app: '/app',
   device: '/devices',
   newDevice: '/devices/new',
-  editDevice: '/devices/:id/edit'
+  editDevice: '/devices/:id/edit',
+  certificates: '/certificates',
+  editCertificate: '/certificates/:id',
+  newCertificate: '/certificates/new'
 };

@@ -29,6 +29,7 @@ const Loadable = (Component: ElementType) => (props: any) => {
 
 export default function Router() {
   return useRoutes([
+    // Authenticate
     {
       path: 'auth',
       children: [
@@ -50,6 +51,7 @@ export default function Router() {
         }
       ],
     },
+    // Dashboard
     {
       path: path.home,
       element: (
@@ -63,9 +65,12 @@ export default function Router() {
         { path: path.device, element: <Devices /> },
         { path: path.newDevice, element: <NewDevices /> },
         { path: path.editDevice, element: <EditDevices /> },
-
+        { path: path.certificates, element: <Certificates /> },
+        { path: path.newCertificate, element: <NewCertificates /> },
+        { path: path.editCertificate, element: <EditCertificates /> },
       ],
     },
+    // page Error
     {
       path: '*',
       element: <LogoOnlyLayout />,
@@ -84,9 +89,13 @@ const Login = Loadable(lazy(() => import('src/containers/Auth/login')));
 const Register = Loadable(lazy(() => import('src/containers/Auth/register')));
 
 // Dashboard
-const Dashboard = Loadable(lazy(() => import('src/containers/Dashboard')));
-const Devices = Loadable(lazy(() => import('src/containers/Devices')));
+const Dashboard = Loadable(lazy(() => import('src/pages/Dashboard')));
+const Certificates = Loadable(lazy(() => import('src/pages/Certificates')));
+const NewCertificates = Loadable(lazy(() => import('src/containers/Certificates/view/NewCertificate')));
+const EditCertificates = Loadable(lazy(() => import('src/containers/Certificates/view/EditCertificate')));
+
+const Devices = Loadable(lazy(() => import('src/pages/Devices')));
 const NewDevices = Loadable(lazy(() => import('src/containers/Devices/view/newDevice')));
 const EditDevices = Loadable(lazy(() => import('src/containers/Devices/view/editDevice')));
 
-const NotFound = Loadable(lazy(() => import('../pages/Page404')));
+const NotFound = Loadable(lazy(() => import('src/pages/Page404')));
