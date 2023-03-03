@@ -89,7 +89,7 @@ const Login = Loadable(lazy(() => import('src/containers/Auth/login')));
 const Register = Loadable(lazy(() => import('src/containers/Auth/register')));
 
 // Dashboard
-const Dashboard = Loadable(lazy(() => import('src/pages/Dashboard')));
+const Dashboard = Loadable(lazy(() => import('src/containers/Dashboard/GeneralApp')));
 const Certificates = Loadable(lazy(() => import('src/pages/Certificates')));
 const NewCertificates = Loadable(lazy(() => import('src/containers/Certificates/view/NewCertificate')));
 const EditCertificates = Loadable(lazy(() => import('src/containers/Certificates/view/EditCertificate')));
