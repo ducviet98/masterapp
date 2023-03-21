@@ -4,7 +4,7 @@ import useDebounce from './useDebounce';
 export const usePagination = () => {
   const [page, setPage] = useState(0);
 
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [search, setSearch] = useState('');
 
