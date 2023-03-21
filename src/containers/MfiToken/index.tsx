@@ -1,40 +1,41 @@
 import { Button, Card, Container, IconButton, MenuItem, Tooltip, Link } from "@mui/material";
 import dayjs from 'dayjs';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // component
 import HeaderBreadcrumbs from "src/components/HeaderBreadcrumbs";
 import Iconify from "src/components/Iconify";
 import Page from "src/components/Page";
 import { TableComp } from 'src/components/table';
-import Toolbar from "src/containers/Certificates/components/Toolbar";
-import ToolTipRow from "src/containers/Certificates/components/TooltipRow";
-import { FILTER_OPTIONS, headerTable } from 'src/containers/Certificates/constants/index';
-import { deleteCertificateRequest, getCertificateRequest } from "src/containers/Certificates/store/actions";
-import reducer from 'src/containers/Certificates/store/reducer';
-import saga from 'src/containers/Certificates/store/sagas';
-import { makeSelectCertificate, makeSelectIsLoading, makeSelectTotal } from "src/containers/Certificates/store/selectors";
+import Toolbar from "src/containers/MfiToken/components/Toolbar";
+import { FILTER_OPTIONS, headerTable } from 'src/containers/MfiToken/constants/index';
+import reducer from 'src/containers/MfiToken/store/reducer';
+import saga from 'src/containers/MfiToken/store/sagas';
+import { makeSelectMfiToken, makeSelectIsLoading, makeSelectTotal } from "src/containers/MfiToken/store/selectors";
 import { usePagination } from "src/hooks/usePagination";
 import useSettings from "src/hooks/useSettings";
 import { useInjectReducer } from "src/utils/injectReducer";
 import { useInjectSaga } from "src/utils/injectSaga";
 import { MenuAction } from "./components/MenuAction";
-import { CertificateType } from "./interfaces";
 import { path } from 'src/constants/path'
-import useHandleDataTable from "src/hooks/useHandleTable";
+import { deleteMfiTokenRequest, getMfiTokenRequest } from "./store/actions";
+import ToolTipRow from "../Certificates/components/TooltipRow";
+import { MFiTokenType } from "./interfaces";
 
-const CertificateContainer = () => {
-
-  useInjectReducer({ key: 'certificate', reducer });
-  useInjectSaga({ key: 'certificate', saga });
+const MfiContainer = () => {
+  useInjectReducer({ key: 'mfiToken', reducer });
+  useInjectSaga({ key: 'mfiToken', saga });
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { themeStretch } = useSettings();
 
-  const certificates: CertificateType[] = useSelector(makeSelectCertificate())
+  const mfiTokens: MFiTokenType[] = useSelector(makeSelectMfiToken())
   const total: number = useSelector(makeSelectTotal())
   const isLoading: boolean = useSelector(makeSelectIsLoading())
+
+  const [selectedItems, setSelectedItems] = useState<number[]>([])
 
   const {
     debouncedSearchTerm,
@@ -48,21 +49,30 @@ const CertificateContainer = () => {
     handleFilter
   } = usePagination();
 
-  const {
-    selectAllTable,
-    selectItemTable,
-    handleEdit,
-    setSelectedItems,
-    selectedItems
-  } = useHandleDataTable({
-    dataTable: certificates
-  })
+  const selectAllTable = () => {
+    if (mfiTokens.length === selectedItems.length) {
+      setSelectedItems([])
+    }
+    else {
+      const all = mfiTokens.map((item: MFiTokenType) => item.id)
+      setSelectedItems(all)
+    }
+  }
+
+  const selectItemTable = (value: number) => {
+    if (selectedItems.includes(value)) return setSelectedItems(selectedItems.filter((item: any) => item !== value))
+    setSelectedItems([...selectedItems, value])
+  }
+
+  const handleEdit = (value: number) => {
+    navigate(`${path.mfiToken}/${value}`)
+  }
 
   const handleDelete = (id: number) => {
-    dispatch(deleteCertificateRequest({
+    dispatch(deleteMfiTokenRequest({
       ids: [id],
       callback: () => {
-        dispatch(getCertificateRequest({
+        dispatch(getMfiTokenRequest({
           page: 0,
           rowsPerPage: 10,
           search: '',
@@ -74,10 +84,10 @@ const CertificateContainer = () => {
   }
 
   const handleDeleteMulti = () => {
-    dispatch(deleteCertificateRequest({
+    dispatch(deleteMfiTokenRequest({
       ids: selectedItems,
       callback: () => {
-        dispatch(getCertificateRequest({
+        dispatch(getMfiTokenRequest({
           page: 0,
           rowsPerPage: 10,
           search: '',
@@ -88,14 +98,16 @@ const CertificateContainer = () => {
     }))
   }
 
-  const renderBodyTable = () => certificates?.map((row: CertificateType) => ({
+  const renderBodyTable = () => mfiTokens?.map((row: any) => ({
     id: row.id,
-    name: <Link component={RouterLink} to={`${path.certificates}/${row.id}`} variant="subtitle2" noWrap>
-      {row.name}
+    certificate_id: <Link component={RouterLink} to={`${path.mfiToken}/${row.id}`} variant="subtitle2" noWrap>
+      {row.certificate_id}
     </Link>,
-    csr: <ToolTipRow title={row.csr} />,
-    key: <ToolTipRow title={row.key} />,
-    certificate: <ToolTipRow title={row.certificate} />,
+    name: <ToolTipRow title={row.name} />,
+    token_id: <ToolTipRow title={row.token_id} />,
+    base64_token: <ToolTipRow title={row.base64_token} />,
+    crc32_in_hex: <ToolTipRow title={row.crc32_in_hex} />,
+    ppid: <ToolTipRow title={row.ppid} />,
     created_at: dayjs(row.created_at).format('MM-DD-YY h:mm A'),
     updated_at: dayjs(row.updated_at).format('MM-DD-YY h:mm A'),
     action: <MenuAction >
@@ -105,7 +117,7 @@ const CertificateContainer = () => {
         <Iconify icon={'eva:trash-2-outline'} />
         Delete
       </MenuItem>
-      <MenuItem onClick={() => handleEdit(path.certificates, row.id)}>
+      <MenuItem onClick={() => handleEdit(row.id)}>
         <Iconify icon={'eva:edit-fill'} />
         Update
       </MenuItem>
@@ -113,7 +125,7 @@ const CertificateContainer = () => {
   }));
 
   useEffect(() => {
-    dispatch(getCertificateRequest({
+    dispatch(getMfiTokenRequest({
       page,
       rowsPerPage,
       search: debouncedSearchTerm,
@@ -122,22 +134,22 @@ const CertificateContainer = () => {
   }, [dispatch, debouncedSearchTerm, filter, page, rowsPerPage])
 
   return (
-    <Page title="Certificate List">
+    <Page title="MFI Token List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Certificate List"
+          heading="MFI Token List"
           links={[
             { name: 'Dashboard', href: '/' },
-            { name: 'Certificate List' },
+            { name: 'MFI Token' },
           ]}
           action={
             <Button
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
               component={RouterLink}
-              to={path.newCertificate}
+              to={path.newMfiToken}
             >
-              New Certificate
+              New MFI Token
             </Button>
           }
         />
@@ -176,4 +188,4 @@ const CertificateContainer = () => {
   )
 }
 
-export default CertificateContainer
+export default MfiContainer
