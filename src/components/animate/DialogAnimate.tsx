@@ -24,7 +24,7 @@ export default function DialogAnimate({
       {open && (
         <Dialog
           fullWidth
-          maxWidth="xs"
+          maxWidth="sm"
           open={open}
           onClose={onClose}
           PaperComponent={(props) => (

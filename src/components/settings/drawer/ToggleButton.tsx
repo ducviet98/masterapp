@@ -12,7 +12,7 @@ import { IconButtonAnimate } from '../../animate';
 const RootStyle = styled('span')(({ theme }) => ({
   ...cssStyles(theme).bgBlur({ opacity: 0.64 }),
   right: 0,
-  top: '50%',
+  top: '90%',
   position: 'fixed',
   marginTop: theme.spacing(-3),
   padding: theme.spacing(0.5),

@@ -1,5 +1,3 @@
-const DashboardContainer = () => {
-  return <div>Dashboard</div>;
-};
+const DashboardContainer = () => <div>Dashboard</div>
 
 export default DashboardContainer;

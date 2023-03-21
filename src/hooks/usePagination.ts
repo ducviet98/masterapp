@@ -8,6 +8,12 @@ export const usePagination = () => {
 
   const [search, setSearch] = useState('');
 
+  const [filter, setFilter] = useState('');
+
+  const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilter(event.target.value);
+  };
+
   const handleSearch = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
@@ -25,6 +31,7 @@ export const usePagination = () => {
   };
 
   return {
+    filter,
     page,
     rowsPerPage,
     search,
@@ -32,5 +39,6 @@ export const usePagination = () => {
     handleSearch,
     handleChangePage,
     handleChangeRowsPerPage,
+    handleFilter
   };
 };

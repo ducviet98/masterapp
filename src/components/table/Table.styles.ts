@@ -56,8 +56,10 @@ export const useStyles = makeStyles((theme: any) => ({
   tableContainer: {
     overflowX: 'scroll',
     maxHeight: 'calc(100vh - 300px)',
+    msOverflowStyle: 'none',
+    scrollbarWidth: 'none',
     '&::-webkit-scrollbar': {
-      width: 0,
+      display: 'none'
     },
   },
 }));

@@ -1,26 +1,21 @@
 /* eslint-disable */
-import React, { FC, useState } from 'react';
 import {
-  Box,
-  TableBody,
+  Box, Checkbox, CircularProgress, Paper, Skeleton, TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TablePagination,
   TableRow,
-  TableSortLabel,
-  Paper,
-  Checkbox,
-  Typography,
-  Skeleton,
-  CircularProgress,
+  TableSortLabel, Typography
 } from '@mui/material';
 import MuiTable from '@mui/material/Table';
 import cx from 'clsx';
+import React, { FC, useState } from 'react';
 
 import { getComparator, stableSort } from './Table.helper';
-import { Order, ITable } from './Table.types';
 import { useStyles } from './Table.styles';
+import { ITable, Order } from './Table.types';
+import TableSelectedActions from './TableSelectedActions';
 
 const TableComp: FC<ITable> = ({
   columns,
@@ -38,6 +33,7 @@ const TableComp: FC<ITable> = ({
   selectItemTable,
   onClickItem,
   onChangePage,
+  actionSelect,
 }) => {
   const classes = useStyles();
   const [order, setOrder] = useState<Order>('asc');
@@ -91,7 +87,7 @@ const TableComp: FC<ITable> = ({
             <TableCell
               key={column.id}
               sortDirection={orderBy === column.id ? order : false}
-              align={column.textAlign || 'left'}
+              align={column.textAlign || 'center'}
             >
               <TableSortLabel
                 className={cx({
@@ -240,7 +236,15 @@ const TableComp: FC<ITable> = ({
   return (
     <Box width="100%">
       <Paper className={classes.wrapperPaper}>
-        <TableContainer>
+        <TableContainer className={classes.tableContainer} >
+          {
+            selectedItems.length > 0 && <TableSelectedActions
+              numSelected={selectedItems.length}
+              rowCount={rows.length}
+              onSelectAllRows={selectAllTable}
+              actions={actionSelect}
+            />
+          }
           <MuiTable sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
             {renderHeadTable()}
             {renderBodyTable()}
