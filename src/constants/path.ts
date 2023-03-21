@@ -8,5 +8,13 @@ export const path = {
   editDevice: '/devices/:id/edit',
   certificates: '/certificates',
   editCertificate: '/certificates/:id',
-  newCertificate: '/certificates/new'
+  newCertificate: '/certificates/new',
+
+  mfiToken: '/mfi-token',
+  editMfiToken: '/mfi-token/:id',
+  newMfiToken: '/mfi-token/new',
+
+  mfiApi: '/mfi-api',
+  editMfiApi: '/mfi-api/:id',
+  newMfiApi: '/mfi-api/new'
 };
