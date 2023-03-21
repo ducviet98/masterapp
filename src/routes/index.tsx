@@ -68,6 +68,14 @@ export default function Router() {
         { path: path.certificates, element: <Certificates /> },
         { path: path.newCertificate, element: <NewCertificates /> },
         { path: path.editCertificate, element: <EditCertificates /> },
+
+        { path: path.mfiToken, element: <MfiToken /> },
+        { path: path.newMfiToken, element: <NewMfiToken /> },
+        { path: path.editMfiToken, element: <EditMfiToken /> },
+
+        { path: path.mfiApi, element: <MfiApi /> },
+        { path: path.newMfiApi, element: <NewMfiApi /> },
+        { path: path.editMfiApi, element: <EditMfiApi /> },
       ],
     },
     // page Error
@@ -97,5 +105,13 @@ const EditCertificates = Loadable(lazy(() => import('src/containers/Certificates
 const Devices = Loadable(lazy(() => import('src/pages/Devices')));
 const NewDevices = Loadable(lazy(() => import('src/containers/Devices/view/newDevice')));
 const EditDevices = Loadable(lazy(() => import('src/containers/Devices/view/editDevice')));
+
+const MfiToken = Loadable(lazy(() => import('src/containers/MfiToken')));
+const NewMfiToken = Loadable(lazy(() => import('src/containers/MfiToken/view/NewCertificate')));
+const EditMfiToken = Loadable(lazy(() => import('src/containers/MfiToken/view/EditCertificate')));
+
+const MfiApi = Loadable(lazy(() => import('src/containers/MfiApi')));
+const NewMfiApi = Loadable(lazy(() => import('src/containers/MfiApi/view/NewMfiApi')));
+const EditMfiApi = Loadable(lazy(() => import('src/containers/MfiApi/view/EditMfiApi')));
 
 const NotFound = Loadable(lazy(() => import('src/pages/Page404')));

@@ -39,6 +39,7 @@ export const usePagination = () => {
     handleSearch,
     handleChangePage,
     handleChangeRowsPerPage,
-    handleFilter
+    handleFilter,
+    setSearch
   };
 };
