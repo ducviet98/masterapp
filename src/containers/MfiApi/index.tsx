@@ -1,5 +1,4 @@
 import { Button, Card, Container, IconButton, MenuItem, Tooltip } from '@mui/material';
-import dayjs from 'dayjs';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
@@ -39,7 +38,7 @@ const MfiAPI = () => {
   const {
     debouncedSearchTerm,
     page,
-    rowsPerPage, 
+    rowsPerPage,
     search,
     filter,
     handleChangePage,
@@ -91,21 +90,28 @@ const MfiAPI = () => {
     );
   };
 
+  const handleRequestCallApiMfi = (data: any) => {
+    console.log('data', data);
+  }
+
   const renderBodyTable = () =>
     mfiTokens?.map((row: MFiAPIType) => ({
       id: row?.id,
       url: row?.url,
       method: row?.method,
       name: row?.name,
-      query: new URLSearchParams(row?.query).toString(),
-      param: new URLSearchParams(row?.param).toString(),
-      body: Object.keys(row?.body).map(
-        (item: any, index: number) => <div key={index}>
-          {item} : {row?.body[item]} <br />
-        </div>
+      // query: new URLSearchParams(row?.query).toString(),
+      // param: new URLSearchParams(row?.param).toString(),
+      // body: Object.keys(row?.body).map(
+      //   (item: any, index: number) => <div key={index}>
+      //     {item} : {row?.body[item]} <br />
+      //   </div>
+      // ),
+      // created_at: dayjs(row?.created_at).format('MM-DD-YY h:mm A'),
+      // updated_at: dayjs(row?.updated_at).format('MM-DD-YY h:mm A'),
+      request: (
+        <Button onClick={() => handleRequestCallApiMfi(row)}>Request API</Button>
       ),
-      created_at: dayjs(row?.created_at).format('MM-DD-YY h:mm A'),
-      updated_at: dayjs(row?.updated_at).format('MM-DD-YY h:mm A'),
       action: (
         <MenuAction>
           <MenuItem onClick={() => handleEdit(path.mfiApi, row?.id)}>
@@ -118,6 +124,7 @@ const MfiAPI = () => {
           </MenuItem>
         </MenuAction>
       ),
+
     }));
 
   useEffect(() => {
@@ -132,55 +139,57 @@ const MfiAPI = () => {
   }, [dispatch, debouncedSearchTerm, filter, page, rowsPerPage]);
 
   return (
-    <Page title="MFI API List">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <HeaderBreadcrumbs
-          heading="MFI API List"
-          links={[{ name: 'Dashboard', href: '/' }, { name: 'MFI API' }]}
-          action={
-            <Button
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-              component={RouterLink}
-              to={path.newMfiApi}
-            >
-              New MFI Token
-            </Button>
-          }
-        />
-        <Card>
-          <Toolbar
-            search={search}
-            filter={filter}
-            onSearch={handleSearch}
-            onFilter={handleFilter}
-            optionsRole={FILTER_OPTIONS}
-          />
-
-          <TableComp
-            selectItemTable={selectItemTable}
-            selectAllTable={selectAllTable}
-            selectedItems={selectedItems}
-            isSelect
-            rows={renderBodyTable()}
-            columns={headerTable}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            handleChangePage={handleChangePage}
-            handleChangeRowsPerPage={handleChangeRowsPerPage}
-            count={total}
-            isLoading={isLoading}
-            actionSelect={
-              <Tooltip title="Delete">
-                <IconButton color="primary" onClick={handleDeleteMulti}>
-                  <Iconify icon={'eva:trash-2-outline'} />
-                </IconButton>
-              </Tooltip>
+    <>
+      <Page title="MFI API List">
+        <Container maxWidth={themeStretch ? false : 'lg'}>
+          <HeaderBreadcrumbs
+            heading="MFI API List"
+            links={[{ name: 'Dashboard', href: '/' }, { name: 'MFI API' }]}
+            action={
+              <Button
+                variant="contained"
+                startIcon={<Iconify icon="eva:plus-fill" />}
+                component={RouterLink}
+                to={path.newMfiApi}
+              >
+                New MFI Token
+              </Button>
             }
           />
-        </Card>
-      </Container>
-    </Page>
+          <Card>
+            <Toolbar
+              search={search}
+              filter={filter}
+              onSearch={handleSearch}
+              onFilter={handleFilter}
+              optionsRole={FILTER_OPTIONS}
+            />
+
+            <TableComp
+              selectItemTable={selectItemTable}
+              selectAllTable={selectAllTable}
+              selectedItems={selectedItems}
+              isSelect
+              rows={renderBodyTable()}
+              columns={headerTable}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              handleChangePage={handleChangePage}
+              handleChangeRowsPerPage={handleChangeRowsPerPage}
+              count={total}
+              isLoading={isLoading}
+              actionSelect={
+                <Tooltip title="Delete">
+                  <IconButton color="primary" onClick={handleDeleteMulti}>
+                    <Iconify icon={'eva:trash-2-outline'} />
+                  </IconButton>
+                </Tooltip>
+              }
+            />
+          </Card>
+        </Container>
+      </Page>
+    </>
   );
 };
 
