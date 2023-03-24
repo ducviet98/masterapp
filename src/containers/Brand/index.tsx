@@ -1,5 +1,5 @@
-import { Button, Card, Container, IconButton, MenuItem, Tooltip, Link } from "@mui/material";
-import dayjs from 'dayjs';
+import { Button, Card, Container, IconButton, MenuItem, Tooltip } from "@mui/material";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
@@ -8,30 +8,29 @@ import HeaderBreadcrumbs from "src/components/HeaderBreadcrumbs";
 import Iconify from "src/components/Iconify";
 import Page from "src/components/Page";
 import { TableComp } from 'src/components/table';
-import Toolbar from "src/containers/MfiToken/components/Toolbar";
-import { FILTER_OPTIONS, headerTable } from 'src/containers/MfiToken/constants/index';
-import reducer from 'src/containers/MfiToken/store/reducer';
-import saga from 'src/containers/MfiToken/store/sagas';
-import { makeSelectMfiToken, makeSelectIsLoading, makeSelectTotal } from "src/containers/MfiToken/store/selectors";
+import { path } from 'src/constants/path';
+import Toolbar from "src/containers/Brand/components/Toolbar";
+import { FILTER_OPTIONS, headerTable } from 'src/containers/Brand/constants/index';
+import reducer from 'src/containers/Brand/store/reducer';
+import saga from 'src/containers/Brand/store/sagas';
+import { makeSelectBrand, makeSelectIsLoading, makeSelectTotal } from "src/containers/Brand/store/selectors";
 import { usePagination } from "src/hooks/usePagination";
 import useSettings from "src/hooks/useSettings";
 import { useInjectReducer } from "src/utils/injectReducer";
 import { useInjectSaga } from "src/utils/injectSaga";
 import { MenuAction } from "./components/MenuAction";
-import { path } from 'src/constants/path'
-import { deleteMfiTokenRequest, getMfiTokenRequest } from "./store/actions";
-import ToolTipRow from "../Certificates/components/TooltipRow";
-import { MFiTokenType } from "./interfaces";
+import { BrandType } from "./interfaces";
+import { deleteBrandRequest, getBrandRequest } from "./store/actions";
 
-const MfiContainer = () => {
-  useInjectReducer({ key: 'mfiToken', reducer });
-  useInjectSaga({ key: 'mfiToken', saga });
+const BrandsContainer = () => {
+  useInjectReducer({ key: 'brand', reducer });
+  useInjectSaga({ key: 'brand', saga });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { themeStretch } = useSettings();
 
-  const mfiTokens: MFiTokenType[] = useSelector(makeSelectMfiToken())
+  const brands: BrandType[] = useSelector(makeSelectBrand())
   const total: number = useSelector(makeSelectTotal())
   const isLoading: boolean = useSelector(makeSelectIsLoading())
 
@@ -50,11 +49,11 @@ const MfiContainer = () => {
   } = usePagination();
 
   const selectAllTable = () => {
-    if (mfiTokens.length === selectedItems.length) {
+    if (brands.length === selectedItems.length) {
       setSelectedItems([])
     }
     else {
-      const all = mfiTokens.map((item: MFiTokenType) => item.id)
+      const all = brands.map((item: BrandType) => item.id)
       setSelectedItems(all)
     }
   }
@@ -65,14 +64,14 @@ const MfiContainer = () => {
   }
 
   const handleEdit = (value: number) => {
-    navigate(`${path.mfiToken}/${value}`)
+    navigate(`${path.brand}/${value}`)
   }
 
   const handleDelete = (id: number) => {
-    dispatch(deleteMfiTokenRequest({
+    dispatch(deleteBrandRequest({
       ids: [id],
       callback: () => {
-        dispatch(getMfiTokenRequest({
+        dispatch(getBrandRequest({
           page: 0,
           rowsPerPage: 10,
           search: '',
@@ -84,10 +83,10 @@ const MfiContainer = () => {
   }
 
   const handleDeleteMulti = () => {
-    dispatch(deleteMfiTokenRequest({
+    dispatch(deleteBrandRequest({
       ids: selectedItems,
       callback: () => {
-        dispatch(getMfiTokenRequest({
+        dispatch(getBrandRequest({
           page: 0,
           rowsPerPage: 10,
           search: '',
@@ -98,18 +97,11 @@ const MfiContainer = () => {
     }))
   }
 
-  const renderBodyTable = () => mfiTokens?.map((row: any) => ({
+  const renderBodyTable = () => brands?.map((row: BrandType) => ({
     id: row.id,
-    certificate_id: <Link component={RouterLink} to={`${path.mfiToken}/${row.id}`} variant="subtitle2" noWrap>
-      {row.certificate_id}
-    </Link>,
     name: row.name,
-    token_id: row.token_id,
-    base64_token: <ToolTipRow title={row.base64_token} />,
-    crc32_in_hex: row.crc32_in_hex,
-    ppid: row.ppid,
-    created_at: dayjs(row.created_at).format('MM-DD-YY h:mm A'),
-    updated_at: dayjs(row.updated_at).format('MM-DD-YY h:mm A'),
+    created_at: dayjs(row?.created_at).format('MM-DD-YY h:mm A'),
+    updated_at: dayjs(row?.updated_at).format('MM-DD-YY h:mm A'),
     action: <MenuAction >
       <MenuItem onClick={() => handleDelete(row.id)}
         sx={{ color: 'error.main' }}
@@ -125,7 +117,7 @@ const MfiContainer = () => {
   }));
 
   useEffect(() => {
-    dispatch(getMfiTokenRequest({
+    dispatch(getBrandRequest({
       page,
       rowsPerPage,
       search: debouncedSearchTerm,
@@ -134,22 +126,22 @@ const MfiContainer = () => {
   }, [dispatch, debouncedSearchTerm, filter, page, rowsPerPage])
 
   return (
-    <Page title="MFI Token List">
+    <Page title="Brand List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="MFI Token List"
+          heading="Brand List"
           links={[
             { name: 'Dashboard', href: '/' },
-            { name: 'MFI Token' },
+            { name: 'Brand' },
           ]}
           action={
             <Button
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
               component={RouterLink}
-              to={path.newMfiToken}
+              to={path.newBrand}
             >
-              New MFI Token
+              New Brand
             </Button>
           }
         />
@@ -188,4 +180,4 @@ const MfiContainer = () => {
   )
 }
 
-export default MfiContainer
+export default BrandsContainer

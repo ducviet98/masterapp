@@ -34,6 +34,7 @@ export interface deviceDetailType {
   brand: number;
   category: number;
   status: number;
+  certificate: string;
 }
 
 export interface editDeviceType {

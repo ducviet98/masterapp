@@ -32,7 +32,7 @@ const usersReduce = (state = initialState, { type, payload }: any) =>
         break;
       case types.GET_BRANDS_SUCCESS:
         draft.isLoading = false;
-        draft.brands = payload;
+        draft.brands = payload.results;
         break;
       case types.GET_BRANDS_FAIL:
         draft.isLoading = false;

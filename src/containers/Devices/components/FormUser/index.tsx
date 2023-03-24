@@ -2,31 +2,59 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { LoadingButton } from '@mui/lab';
 import { Box, Button, Card, Grid, Stack } from '@mui/material';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   FormProvider,
   RHFSelect,
   RHFTextField
 } from 'src/components/hook-form';
+import RHFAutocomplete from 'src/components/hook-form/RHFAutocomplete';
+import { path } from 'src/constants/path';
+import { CertificateType } from 'src/containers/Certificates/interfaces';
+import reducerCertificate from 'src/containers/Certificates/store/reducer';
+import sagaCertificate from 'src/containers/Certificates/store/sagas';
+import { makeSelectCertificate } from 'src/containers/Certificates/store/selectors';
+import { usePagination } from 'src/hooks/usePagination';
 import { DeviceSchema } from '../../constants';
-import { FormUserType, BrandType } from '../../interface';
-import { createDeviceRequest, editDeviceRequest } from '../../store/actions';
+import { BrandType, FormUserType } from '../../interface';
+import { createDeviceRequest, editDeviceRequest, getBrandsRequest, getCategoriesRequest, getStatusRequest } from '../../store/actions';
+import reducer from '../../store/reducer';
+import saga from '../../store/sagas';
 import {
   makeSelectListBrands,
   makeSelectListCategories,
   makeSelectListStatus
 } from '../../store/selectors';
-import { path } from 'src/constants/path'
+
+import { getCertificateRequest } from 'src/containers/Certificates/store/actions';
+import { useInjectReducer } from 'src/utils/injectReducer';
+import { useInjectSaga } from 'src/utils/injectSaga';
 
 const FormUser = ({ isEdit, oldData, idDevice }: FormUserType) => {
+
+  useInjectReducer({ key: 'device', reducer });
+  useInjectSaga({ key: 'device', saga });
+
+  useInjectReducer({ key: 'certificate', reducer: reducerCertificate });
+  useInjectSaga({ key: 'certificate', saga: sagaCertificate });
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const brands: BrandType[] = useSelector(makeSelectListBrands());
   const categories: BrandType[] = useSelector(makeSelectListCategories());
   const status: BrandType[] = useSelector(makeSelectListStatus());
+  const certificates: CertificateType[] = useSelector(makeSelectCertificate())
+
+  const {
+    debouncedSearchTerm,
+    search,
+    handleSearch,
+    setSearch
+  } = usePagination();
 
   const defaultValues = useMemo(
     () => ({
@@ -38,8 +66,10 @@ const FormUser = ({ isEdit, oldData, idDevice }: FormUserType) => {
       brand: oldData?.brand || '',
       category: oldData?.category || '',
       status: oldData?.status || '',
+      certificate: certificates.find((item: any) => item.id === oldData?.certificate) || '',
     }),
-    [oldData]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [oldData, certificates.length]
   );
 
   const methods = useForm<any>({
@@ -57,19 +87,35 @@ const FormUser = ({ isEdit, oldData, idDevice }: FormUserType) => {
       isEdit
         ? editDeviceRequest({
           ...values,
+          certificate: values.certificate?.id,
           idDevice,
           callback: () => {
             reset();
+            navigate(path.device)
           },
         })
         : createDeviceRequest({
           ...values,
+          certificate: values.certificate?.id,
           callback: () => {
             reset();
+            navigate(path.device)
           },
         })
     );
   };
+
+  useEffect(() => {
+    dispatch(getCategoriesRequest())
+    dispatch(getStatusRequest())
+    dispatch(getBrandsRequest())
+    dispatch(getCertificateRequest({
+      page: 0,
+      rowsPerPage: 10,
+      search: debouncedSearchTerm,
+      ordering: ''
+    }))
+  }, [dispatch, debouncedSearchTerm])
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -116,6 +162,15 @@ const FormUser = ({ isEdit, oldData, idDevice }: FormUserType) => {
                   </option>
                 ))}
               </RHFSelect>
+              <RHFAutocomplete
+                valueSearch={search || ''}
+                onChangeSearch={handleSearch}
+                options={certificates}
+                name="certificate"
+                getOptionLabel={(option: CertificateType) => option?.name || ''}
+                label="certificate"
+                setSearch={setSearch}
+              />
             </Box>
             <Stack
               justifyContent="space-between"
@@ -131,7 +186,7 @@ const FormUser = ({ isEdit, oldData, idDevice }: FormUserType) => {
                 Back
               </Button>
               <LoadingButton type="submit" variant="contained">
-                {isEdit ? 'Update User' : 'Create User'}
+                {isEdit ? 'Update' : 'Create'}
               </LoadingButton>
             </Stack>
           </Card>

@@ -11,29 +11,33 @@ export const headerTable = [
     id: 'method',
     label: 'Method',
   },
+  // {
+  //   id: 'name',
+  //   label: 'Name',
+  // },
+  // {
+  //   id: 'query',
+  //   label: 'Query',
+  // },
+  // {
+  //   id: 'param',
+  //   label: 'Param',
+  // },
+  // {
+  //   id: 'body',
+  //   label: 'Body',
+  // },
+  // {
+  //   id: 'created_at',
+  //   label: 'Created at',
+  // },
+  // {
+  //   id: 'updated_at',
+  //   label: 'Updated at',
+  // },
   {
-    id: 'name',
-    label: 'Name',
-  },
-  {
-    id: 'query',
-    label: 'Query',
-  },
-  {
-    id: 'param',
-    label: 'Param',
-  },
-  {
-    id: 'body',
-    label: 'Body',
-  },
-  {
-    id: 'created_at',
-    label: 'Created at',
-  },
-  {
-    id: 'updated_at',
-    label: 'Updated at',
+    id: 'request',
+    label: 'Request',
   },
   {
     id: 'action',

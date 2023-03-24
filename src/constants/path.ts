@@ -16,5 +16,9 @@ export const path = {
 
   mfiApi: '/mfi-api',
   editMfiApi: '/mfi-api/:id',
-  newMfiApi: '/mfi-api/new'
+  newMfiApi: '/mfi-api/new',
+
+  brand: '/brand',
+  editBrand: '/brand/:id',
+  newBrand: '/brand/new'
 };

@@ -75,3 +75,22 @@ export const editMfiApiFail = (data: any) => ({
   type: types.EDIT_MFI_API_FAIL,
   payload: data,
 })
+
+export const requestMfiApiRequest = (data: any) => ({
+  type: types.REQUEST_MFI_API_REQUEST,
+  payload: data,
+})
+
+export const requestMfiApiSuccess = (data: any) => ({
+  type: types.REQUEST_MFI_API_SUCCESS,
+  payload: data,
+})
+
+export const requestMfiApiFail = (data: any) => ({
+  type: types.REQUEST_MFI_API_FAIL,
+  payload: data,
+})
+
+export const removeMfiApiRequest = () => ({
+  type: types.REMOVE_MFI_API_REQUEST,
+})

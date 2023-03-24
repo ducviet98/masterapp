@@ -101,6 +101,7 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
           ...values,
           idDevice,
           certificate_id: values.certificate_id.id,
+          ppid: values.ppid.ppid,
           callback: () => {
             reset();
           },
@@ -111,6 +112,7 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
       return dispatch(createMfiTokenRequest({
         ...values,
         certificate_id: values.certificate_id.id,
+        ppid: values.ppid.ppid,
         callback: () => {
           reset();
         },
