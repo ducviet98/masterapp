@@ -1,5 +1,5 @@
 import { Button, Card, Container, IconButton, MenuItem, Tooltip } from '@mui/material';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 // component
@@ -13,16 +13,17 @@ import { FILTER_OPTIONS, headerTable } from 'src/containers/MfiApi/constants/ind
 import reducer from 'src/containers/MfiApi/store/reducer';
 import saga from 'src/containers/MfiApi/store/sagas';
 import {
-  makeSelectIsLoading, makeSelectMfiApi, makeSelectTotal
+  makeSelectIsLoading, makeSelectMfiApi, makeSelectRequestMfiApi, makeSelectTotal
 } from 'src/containers/MfiApi/store/selectors';
 import useHandleDataTable from 'src/hooks/useHandleTable';
 import { usePagination } from 'src/hooks/usePagination';
 import useSettings from 'src/hooks/useSettings';
 import { useInjectReducer } from 'src/utils/injectReducer';
 import { useInjectSaga } from 'src/utils/injectSaga';
+import DialogRequestApiMfi from './components/DialogRequestApiMfi';
 import { MenuAction } from './components/MenuAction';
 import { MFiAPIType } from './interfaces';
-import { deleteMfiApiRequest, getMfiApiRequest } from './store/actions';
+import { deleteMfiApiRequest, getMfiApiRequest, removeMfiApiRequest } from './store/actions';
 
 const MfiAPI = () => {
   useInjectReducer({ key: 'mfiApi', reducer });
@@ -34,6 +35,9 @@ const MfiAPI = () => {
   const mfiTokens: MFiAPIType[] = useSelector(makeSelectMfiApi());
   const total: number = useSelector(makeSelectTotal());
   const isLoading: boolean = useSelector(makeSelectIsLoading());
+  const requestApi = useSelector(makeSelectRequestMfiApi())
+
+  const [apiDetail, setApiDetail] = useState<MFiAPIType | null>(null)
 
   const {
     debouncedSearchTerm,
@@ -91,7 +95,14 @@ const MfiAPI = () => {
   };
 
   const handleRequestCallApiMfi = (data: any) => {
-    console.log('data', data);
+    setApiDetail(data)
+  }
+
+  const handleClose = () => {
+    if (requestApi) {
+      dispatch(removeMfiApiRequest())
+    }
+    setApiDetail(null)
   }
 
   const renderBodyTable = () =>
@@ -189,6 +200,8 @@ const MfiAPI = () => {
           </Card>
         </Container>
       </Page>
+
+      <DialogRequestApiMfi requestApi={requestApi} open={!!apiDetail?.id} apiDetail={apiDetail} onClose={handleClose} />
     </>
   );
 };

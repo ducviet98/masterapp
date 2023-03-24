@@ -19,10 +19,11 @@ const makeSelectTotal = () =>
 const makeSelectMfiApi = () =>
   createSelector(mfiApiState, (state) => state.mfiApis);
 
-
 const makeSelectMfiApiDetail = () =>
   createSelector(mfiApiState, (state) => state.mfiApiDetail);
 
+const makeSelectRequestMfiApi = () =>
+  createSelector(mfiApiState, (state) => state.requestApi);
 
 export {
   makeSelectIsLoading,
@@ -31,4 +32,5 @@ export {
   makeSelectMfiApi,
   makeSelectMfiApiDetail,
   makeSelectIsLoadingAction,
+  makeSelectRequestMfiApi
 }

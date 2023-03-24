@@ -7,7 +7,9 @@ import {
   createMfiApiService,
   deleteMfiApiService,
   editMfiApiService,
-  getMfiApiDetailService, getMfiApiService
+  getMfiApiDetailService,
+  getMfiApiService,
+  requestMfiApiService
 } from '../services';
 
 
@@ -67,10 +69,22 @@ function* getMfiApiDetailSaga({ payload }: any) {
   }
 }
 
+function* requestMfiApiDetailSaga({ payload }: any) {
+  try {
+    const { data } = yield call(requestMfiApiService, payload);
+    yield put(actionTypes.requestMfiApiSuccess(data.data));
+    toast.success('Request MfiApi Successfully !');
+  } catch (error: any) {
+    yield put(actionTypes.requestMfiApiFail(error));
+    toast.error('Request MfiApi Fail !');
+  }
+}
+
 export default function* watchApp() {
   yield takeLatest(types.GET_MFI_API_REQUEST, getMfiApiSaga);
   yield takeLatest(types.CREATE_MFI_API_REQUEST, createMfiApiSaga);
   yield takeLatest(types.DELETE_MFI_API_REQUEST, deleteMfiApiSaga);
   yield takeLatest(types.EDIT_MFI_API_REQUEST, editMfiApiSaga);
   yield takeLatest(types.GET_MFI_API_DETAIL_REQUEST, getMfiApiDetailSaga);
+  yield takeLatest(types.REQUEST_MFI_API_REQUEST, requestMfiApiDetailSaga);
 }
