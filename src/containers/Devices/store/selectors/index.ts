@@ -2,34 +2,37 @@ import { createSelector } from 'reselect';
 
 import { initialState } from '../reducer';
 
-const userDeviceState = (state: any) => state.device || initialState;
+const DeviceState = (state: any) => state.device || initialState;
 
 const makeSelectIsLoading = () =>
-  createSelector(userDeviceState, (state) => state.isLoading);
+  createSelector(DeviceState, (state) => state.isLoading);
 
 const makeSelectErrors = () =>
-  createSelector(userDeviceState, (state) => state.errors);
+  createSelector(DeviceState, (state) => state.errors);
 
 const makeSelectTotalUsers = () =>
-  createSelector(userDeviceState, (state) => state.total);
+  createSelector(DeviceState, (state) => state.total);
 
 const makeSelectUserDevice = () =>
-  createSelector(userDeviceState, (state) => state.userDevice);
+  createSelector(DeviceState, (state) => state.userDevice);
 
 const makeSelectListDevice = () =>
-  createSelector(userDeviceState, (state) => state.listDevice);
+  createSelector(DeviceState, (state) => state.listDevice);
 
 const makeSelectListCategories = () =>
-  createSelector(userDeviceState, (state) => state.categories);
+  createSelector(DeviceState, (state) => state.categories);
 
 const makeSelectListBrands = () =>
-  createSelector(userDeviceState, (state) => state.brands);
+  createSelector(DeviceState, (state) => state.brands);
 
 const makeSelectListStatus = () =>
-  createSelector(userDeviceState, (state) => state.status);
+  createSelector(DeviceState, (state) => state.status);
 
 const makeSelectDeviceDetail = () =>
-  createSelector(userDeviceState, (state) => state.deviceDetail);
+  createSelector(DeviceState, (state) => state.deviceDetail);
+
+const makeSelectLoadingAction = () =>
+  createSelector(DeviceState, (state) => state.isLoadingAction);
 
 export {
   makeSelectIsLoading,
@@ -41,4 +44,5 @@ export {
   makeSelectListBrands,
   makeSelectListStatus,
   makeSelectDeviceDetail,
+  makeSelectLoadingAction
 };

@@ -6,9 +6,9 @@ import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+
 import {
   FormProvider,
-  RHFSelect,
   RHFTextField
 } from 'src/components/hook-form';
 import RHFAutocomplete from 'src/components/hook-form/RHFAutocomplete';
@@ -26,7 +26,8 @@ import saga from '../../store/sagas';
 import {
   makeSelectListBrands,
   makeSelectListCategories,
-  makeSelectListStatus
+  makeSelectListStatus,
+  makeSelectLoadingAction
 } from '../../store/selectors';
 
 import { getCertificateRequest } from 'src/containers/Certificates/store/actions';
@@ -48,6 +49,7 @@ const FormUser = ({ isEdit, oldData, idDevice }: FormUserType) => {
   const categories: BrandType[] = useSelector(makeSelectListCategories());
   const status: BrandType[] = useSelector(makeSelectListStatus());
   const certificates: CertificateType[] = useSelector(makeSelectCertificate())
+  const isLoadingAction = useSelector(makeSelectLoadingAction())
 
   const {
     debouncedSearchTerm,
@@ -80,14 +82,48 @@ const FormUser = ({ isEdit, oldData, idDevice }: FormUserType) => {
   const {
     reset,
     handleSubmit,
+    setError
   } = methods;
 
   const onSubmit = async (values: any) => {
+
+    if (!values.certificate?.id) {
+      return setError('certificate', {
+        type: 'custom',
+        message: 'Certificate is required'
+      })
+    }
+
+    if (!values.brand?.id) {
+      return setError('brand', {
+        type: 'custom',
+        message: 'brand is required'
+      })
+    }
+
+    if (!values.category?.id) {
+      return setError('category', {
+        type: 'custom',
+        message: 'category is required'
+      })
+    }
+
+    if (!values.status?.id) {
+      return setError('status', {
+        type: 'custom',
+        message: 'status is required'
+      })
+    }
+
     dispatch(
       isEdit
         ? editDeviceRequest({
           ...values,
           certificate: values.certificate?.id,
+          brand: values.brand?.id,
+          category: values.category?.id,
+          status: values.status?.id,
+
           idDevice,
           callback: () => {
             reset();
@@ -97,6 +133,10 @@ const FormUser = ({ isEdit, oldData, idDevice }: FormUserType) => {
         : createDeviceRequest({
           ...values,
           certificate: values.certificate?.id,
+          brand: values.brand?.id,
+          category: values.category?.id,
+          status: values.status?.id,
+
           callback: () => {
             reset();
             navigate(path.device)
@@ -138,30 +178,27 @@ const FormUser = ({ isEdit, oldData, idDevice }: FormUserType) => {
               <RHFTextField name="model_number" label="Model number" />
               <RHFTextField name="upc" label="upc" />
               <RHFTextField name="ppid" label="ppid" />
-              <RHFSelect name="brand" label="brand" placeholder="Brand">
-                <option value="" />
-                {brands?.map((option: BrandType) => (
-                  <option key={option.id} value={option.id}>
-                    {option?.name}
-                  </option>
-                ))}
-              </RHFSelect>
-              <RHFSelect name="category" label="Country" placeholder="Country">
-                <option value="" />
-                {categories?.map((option: BrandType) => (
-                  <option key={option.id} value={option.id}>
-                    {option?.name}
-                  </option>
-                ))}
-              </RHFSelect>
-              <RHFSelect name="status" label="Status" placeholder="Status">
-                <option value="" />
-                {status?.map((option: BrandType) => (
-                  <option key={option.id} value={option.id}>
-                    {option?.name}
-                  </option>
-                ))}
-              </RHFSelect>
+
+              <RHFAutocomplete
+                options={brands}
+                name="brand"
+                getOptionLabel={(option: BrandType) => option?.name || ''}
+                label="brand"
+              />
+
+              <RHFAutocomplete
+                options={categories}
+                name="category"
+                getOptionLabel={(option: BrandType) => option?.name || ''}
+                label="category"
+              />
+
+              <RHFAutocomplete
+                options={status}
+                name="status"
+                getOptionLabel={(option: BrandType) => option?.name || ''}
+                label="status"
+              />
               <RHFAutocomplete
                 valueSearch={search || ''}
                 onChangeSearch={handleSearch}
@@ -185,7 +222,7 @@ const FormUser = ({ isEdit, oldData, idDevice }: FormUserType) => {
               >
                 Back
               </Button>
-              <LoadingButton type="submit" variant="contained">
+              <LoadingButton loading={isLoadingAction} disabled={isLoadingAction} type="submit" variant="contained">
                 {isEdit ? 'Update' : 'Create'}
               </LoadingButton>
             </Stack>

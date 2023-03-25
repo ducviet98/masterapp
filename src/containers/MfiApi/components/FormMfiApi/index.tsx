@@ -17,7 +17,7 @@ import {
 import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 
 import { FormProvider, RHFTextField } from 'src/components/hook-form';
@@ -40,7 +40,9 @@ type FormMfiApiType = {
 };
 
 const FormMfiApi = ({ isEdit, oldData }: FormMfiApiType) => {
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const isLoadingAction = useSelector(makeSelectIsLoadingAction())
 
@@ -81,6 +83,7 @@ const FormMfiApi = ({ isEdit, oldData }: FormMfiApiType) => {
           id: oldData?.id,
           callback: () => {
             reset();
+            navigate(path.mfiApi)
           },
         })
       );
@@ -98,6 +101,7 @@ const FormMfiApi = ({ isEdit, oldData }: FormMfiApiType) => {
               query: {},
               body: {},
             });
+            navigate(path.mfiApi)
           },
         })
       );
