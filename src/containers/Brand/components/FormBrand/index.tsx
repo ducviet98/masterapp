@@ -64,6 +64,7 @@ const FormBrand = ({ isEdit, oldData, idDevice }: FormBrandType) => {
         ...values,
         callback: () => {
           reset();
+          navigate(path.brand)
         },
       }))
     }

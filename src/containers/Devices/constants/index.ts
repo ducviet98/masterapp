@@ -63,7 +63,4 @@ export const DeviceSchema: any = Yup.object().shape({
   name: Yup.string().required('Name is required'),
   model_number: Yup.string().required('Model number is required'),
   ppid: Yup.string().required('ppid is required'),
-  brand: Yup.string().required('Brand is required'),
-  category: Yup.string().required('Category is required'),
-  status: Yup.string().required('Status is required'),
 });

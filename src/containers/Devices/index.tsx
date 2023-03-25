@@ -12,7 +12,7 @@ import { DeviceUser } from 'src/containers/Devices/interface';
 import { usePagination } from 'src/hooks/usePagination';
 import { useInjectReducer } from 'src/utils/injectReducer';
 import { useInjectSaga } from 'src/utils/injectSaga';
-import { MenuUserAction } from './components/MenuUserAction';
+import { MenuDevicesAction } from './components/MenuDevicesAction';
 import { headersTable } from './constants';
 import { deleteDeviceRequest, getUserDeviceRequest } from './store/actions';
 import reducer from './store/reducer';
@@ -79,7 +79,7 @@ const DeviceContainer = ({
       </div>
     ),
     action: (
-      <MenuUserAction
+      <MenuDevicesAction
         row={row}
         onDeleteAction={() => dispatch(deleteDeviceRequest(row.id))}
         onEditAction={() => handleEditDevice(row.id)}

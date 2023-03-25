@@ -1,8 +1,9 @@
 
 import { Container } from '@mui/material';
+
 import HeaderBreadcrumbs from 'src/components/HeaderBreadcrumbs';
 import Page from 'src/components/Page';
-import FormUser from '../../components/FormUser';
+import FormDevices from '../../components/FormDevices';
 
 
 const NewDevice = () => <Page title="User: Create a new user">
@@ -15,7 +16,7 @@ const NewDevice = () => <Page title="User: Create a new user">
         { name: 'new device' },
       ]}
     />
-    <FormUser isEdit={false} />
+    <FormDevices isEdit={false} />
   </Container>
 </Page>
 
