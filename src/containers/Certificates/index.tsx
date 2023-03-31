@@ -89,23 +89,25 @@ const CertificateContainer = () => {
   }
 
   const renderBodyTable = () => certificates?.map((row: CertificateType) => ({
-    id: row.id,
-    name: <Link component={RouterLink} to={`${path.certificates}/${row.id}`} variant="subtitle2" noWrap>
-      {row.name}
+    id: row?.id,
+    name: <Link component={RouterLink} to={`${path.certificates}/${row?.id}`} variant="subtitle2" noWrap>
+      {row?.name}
     </Link>,
-    csr: <ToolTipRow title={row.csr} />,
-    key: <ToolTipRow title={row.key} />,
-    certificate: <ToolTipRow title={row.certificate} />,
-    created_at: dayjs(row.created_at).format('MM-DD-YY h:mm A'),
-    updated_at: dayjs(row.updated_at).format('MM-DD-YY h:mm A'),
+    mfi_account_number: row?.mfi_account_number,
+    company_name: row?.company_name,
+    csr: <ToolTipRow title={row?.csr} />,
+    key: <ToolTipRow title={row?.key} />,
+    certificate: <ToolTipRow title={row?.certificate} />,
+    created_at: dayjs(row?.created_at).format('MM-DD-YY h:mm A'),
+    updated_at: dayjs(row?.updated_at).format('MM-DD-YY h:mm A'),
     action: <MenuAction >
-      <MenuItem onClick={() => handleDelete(row.id)}
+      <MenuItem onClick={() => handleDelete(row?.id)}
         sx={{ color: 'error.main' }}
       >
         <Iconify icon={'eva:trash-2-outline'} />
         Delete
       </MenuItem>
-      <MenuItem onClick={() => handleEdit(path.certificates, row.id)}>
+      <MenuItem onClick={() => handleEdit(path.certificates, row?.id)}>
         <Iconify icon={'eva:edit-fill'} />
         Update
       </MenuItem>

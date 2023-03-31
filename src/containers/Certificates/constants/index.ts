@@ -4,6 +4,14 @@ export const headerTable = [
     label: 'Name',
   },
   {
+    id: 'mfi_account_number',
+    label: 'MFI account number',
+  },
+  {
+    id: 'company_name',
+    label: 'Company name',
+  },
+  {
     id: 'csr',
     label: 'CSR',
   },
