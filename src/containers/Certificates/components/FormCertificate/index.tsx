@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { LoadingButton } from '@mui/lab';
-import { Button, Card, Grid, Stack } from '@mui/material';
+import { Box, Button, Card, Grid, Stack } from '@mui/material';
 import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,10 +18,14 @@ import { CertificateType } from '../../interfaces';
 
 const DeviceSchema = Yup.object().shape({
   name: Yup.string().required('Name is required'),
+  mfi_account_number: Yup.number().required('Mfi account number is required'),
+  company_name: Yup.string().required('Company name is required'),
 });
 
 const DeviceSchemaEdit = Yup.object().shape({
   name: Yup.string().required('Name is required'),
+  mfi_account_number: Yup.number().required('Mfi account number is required'),
+  company_name: Yup.string().required('Company name is required'),
   certificate: Yup.string().required('Certificate is required'),
 });
 
@@ -47,6 +51,8 @@ const FormCertificate = (props: FormCertificateType) => {
   const defaultValues = useMemo(
     () => ({
       name: '',
+      mfi_account_number: 0,
+      company_name: ''
     }),
     []
   );
@@ -57,6 +63,8 @@ const FormCertificate = (props: FormCertificateType) => {
       certificate: certificateDetail?.certificate || '',
       csr: certificateDetail?.csr || '',
       key: certificateDetail?.key || '',
+      mfi_account_number: certificateDetail?.mfi_account_number || 0,
+      company_name: certificateDetail?.company_name || '',
     }),
     [certificateDetail]
   );
@@ -106,12 +114,27 @@ const FormCertificate = (props: FormCertificateType) => {
       <Grid container spacing={3}>
         <Grid item xs={12} md={isEdit ? 6 : 12}>
           <Card sx={{ p: 3 }}>
-            <Stack spacing={3} mb={2}>
+            <Box
+              sx={{
+                display: 'grid',
+                columnGap: 2,
+                rowGap: 3,
+                gridTemplateColumns: {
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                },
+              }}
+            >
               <RHFTextField name="name" label="Name" required />
+              <RHFTextField name="mfi_account_number" label="MFI account number" required type="number" />
+              <RHFTextField name="company_name" label="Company name" required />
+
+            </Box>
+            <Box sx={{ pt: 3 }}>
               {
                 isEdit && <RHFTextField required name="certificate" label="Certificate" multiline rows={3} />
               }
-            </Stack>
+            </Box>
 
             <Stack
               justifyContent="space-between"
