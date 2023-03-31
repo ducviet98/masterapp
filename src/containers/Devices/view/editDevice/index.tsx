@@ -8,7 +8,7 @@ import HeaderBreadcrumbs from 'src/components/HeaderBreadcrumbs';
 import Page from 'src/components/Page';
 import { useInjectReducer } from 'src/utils/injectReducer';
 import { useInjectSaga } from 'src/utils/injectSaga';
-import FormUser from '../../components/FormUser';
+import FormUser from '../../components/FormDevices';
 import reducer from '../../store/reducer';
 import saga from '../../store/sagas';
 import {

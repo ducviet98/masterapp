@@ -103,11 +103,11 @@ const MfiContainer = () => {
     certificate_id: <Link component={RouterLink} to={`${path.mfiToken}/${row.id}`} variant="subtitle2" noWrap>
       {row.certificate_id}
     </Link>,
-    name: <ToolTipRow title={row.name} />,
-    token_id: <ToolTipRow title={row.token_id} />,
+    name: row.name,
+    token_id: row.token_id,
     base64_token: <ToolTipRow title={row.base64_token} />,
-    crc32_in_hex: <ToolTipRow title={row.crc32_in_hex} />,
-    ppid: <ToolTipRow title={row.ppid} />,
+    crc32_in_hex: row.crc32_in_hex,
+    ppid: row.ppid,
     created_at: dayjs(row.created_at).format('MM-DD-YY h:mm A'),
     updated_at: dayjs(row.updated_at).format('MM-DD-YY h:mm A'),
     action: <MenuAction >

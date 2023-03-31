@@ -5,7 +5,7 @@ import { Box, Button, Card, Grid, Stack } from '@mui/material';
 import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   FormProvider, RHFTextField
 } from 'src/components/hook-form';
@@ -47,6 +47,7 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
   useInjectSaga({ key: 'device', saga: sagaDevice });
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const certificates: CertificateType[] = useSelector(makeSelectCertificate())
 
@@ -101,8 +102,9 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
           ...values,
           idDevice,
           certificate_id: values.certificate_id.id,
+          ppid: values.ppid.ppid,
           callback: () => {
-            reset();
+            navigate(path.mfiToken)
           },
         })
       );
@@ -111,8 +113,10 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
       return dispatch(createMfiTokenRequest({
         ...values,
         certificate_id: values.certificate_id.id,
+        ppid: values.ppid.ppid,
         callback: () => {
           reset();
+          navigate(path.mfiToken)
         },
       }))
     }

@@ -64,7 +64,7 @@ type MenuActionPlantSpeciesType = {
   titleAction2?: string;
 };
 
-export const MenuUserAction = (props: MenuActionPlantSpeciesType) => {
+export const MenuDevicesAction = (props: MenuActionPlantSpeciesType) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [anchorRef, open, handleOpen, handleClose] = usePopover();
 

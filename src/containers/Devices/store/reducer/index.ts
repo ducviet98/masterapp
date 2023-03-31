@@ -12,6 +12,7 @@ export const initialState = {
   categories: [],
   status: [],
   deviceDetail: {},
+  isLoadingAction: false,
 };
 
 const usersReduce = (state = initialState, { type, payload }: any) =>
@@ -32,7 +33,7 @@ const usersReduce = (state = initialState, { type, payload }: any) =>
         break;
       case types.GET_BRANDS_SUCCESS:
         draft.isLoading = false;
-        draft.brands = payload;
+        draft.brands = payload.results;
         break;
       case types.GET_BRANDS_FAIL:
         draft.isLoading = false;
@@ -79,14 +80,25 @@ const usersReduce = (state = initialState, { type, payload }: any) =>
         break;
       // EDIT_DEVICE_REQUEST
       case types.EDIT_DEVICE_REQUEST:
-        draft.isLoading = true;
+        draft.isLoadingAction = true;
         break;
       case types.EDIT_DEVICE_FAIL:
-        draft.isLoading = false;
+        draft.isLoadingAction = false;
         break;
       case types.EDIT_DEVICE_SUCCESS:
-        draft.isLoading = false;
+        draft.isLoadingAction = false;
         draft.deviceDetail = payload;
+        break;
+
+      // CREATE_DEVICE_REQUEST
+      case types.CREATE_DEVICE_REQUEST:
+        draft.isLoadingAction = true;
+        break;
+      case types.CREATE_DEVICE_FAIL:
+        draft.isLoadingAction = false;
+        break;
+      case types.CREATE_DEVICE_SUCCESS:
+        draft.isLoadingAction = false;
         break;
       default:
         break;

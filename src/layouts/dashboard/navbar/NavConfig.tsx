@@ -14,6 +14,8 @@ const ICONS = {
   dashboard: getIcon('ic_dashboard'),
   certificates: getIcon('ic_certificate'),
   mfiToken: getIcon('ic_blog'),
+  mfiApi: getIcon('ic_analytics'),
+  brands: getIcon('ic_cart'),
 };
 
 const navConfig = [
@@ -24,7 +26,8 @@ const navConfig = [
       { title: 'devices', path: '/devices', icon: ICONS.devices },
       { title: 'certificates', path: '/certificates', icon: ICONS.certificates },
       { title: 'MFIToken', path: '/mfi-token', icon: ICONS.mfiToken },
-      { title: 'MFIApi', path: '/mfi-api', icon: ICONS.mfiToken },
+      { title: 'MFIApi', path: '/mfi-api', icon: ICONS.mfiApi },
+      { title: 'Brand', path: '/brand', icon: ICONS.brands },
     ],
   }
 ];

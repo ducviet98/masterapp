@@ -1,40 +1,40 @@
-import { Button, Card, Container, IconButton, MenuItem, Tooltip, Link } from "@mui/material";
-import dayjs from 'dayjs';
-import { useEffect } from "react";
+import { Button, Card, Container, IconButton, MenuItem, Tooltip } from "@mui/material";
+import dayjs from "dayjs";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // component
 import HeaderBreadcrumbs from "src/components/HeaderBreadcrumbs";
 import Iconify from "src/components/Iconify";
 import Page from "src/components/Page";
 import { TableComp } from 'src/components/table';
-import Toolbar from "src/containers/Certificates/components/Toolbar";
-import ToolTipRow from "src/containers/Certificates/components/TooltipRow";
-import { FILTER_OPTIONS, headerTable } from 'src/containers/Certificates/constants/index';
-import { deleteCertificateRequest, getCertificateRequest } from "src/containers/Certificates/store/actions";
-import reducer from 'src/containers/Certificates/store/reducer';
-import saga from 'src/containers/Certificates/store/sagas';
-import { makeSelectCertificate, makeSelectIsLoading, makeSelectTotal } from "src/containers/Certificates/store/selectors";
+import { path } from 'src/constants/path';
+import Toolbar from "src/containers/Brand/components/Toolbar";
+import { FILTER_OPTIONS, headerTable } from 'src/containers/Brand/constants/index';
+import reducer from 'src/containers/Brand/store/reducer';
+import saga from 'src/containers/Brand/store/sagas';
+import { makeSelectBrand, makeSelectIsLoading, makeSelectTotal } from "src/containers/Brand/store/selectors";
 import { usePagination } from "src/hooks/usePagination";
 import useSettings from "src/hooks/useSettings";
 import { useInjectReducer } from "src/utils/injectReducer";
 import { useInjectSaga } from "src/utils/injectSaga";
 import { MenuAction } from "./components/MenuAction";
-import { CertificateType } from "./interfaces";
-import { path } from 'src/constants/path'
-import useHandleDataTable from "src/hooks/useHandleTable";
+import { BrandType } from "./interfaces";
+import { deleteBrandRequest, getBrandRequest } from "./store/actions";
 
-const CertificateContainer = () => {
-
-  useInjectReducer({ key: 'certificate', reducer });
-  useInjectSaga({ key: 'certificate', saga });
+const BrandsContainer = () => {
+  useInjectReducer({ key: 'brand', reducer });
+  useInjectSaga({ key: 'brand', saga });
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { themeStretch } = useSettings();
 
-  const certificates: CertificateType[] = useSelector(makeSelectCertificate())
+  const brands: BrandType[] = useSelector(makeSelectBrand())
   const total: number = useSelector(makeSelectTotal())
   const isLoading: boolean = useSelector(makeSelectIsLoading())
+
+  const [selectedItems, setSelectedItems] = useState<number[]>([])
 
   const {
     debouncedSearchTerm,
@@ -48,21 +48,30 @@ const CertificateContainer = () => {
     handleFilter
   } = usePagination();
 
-  const {
-    selectAllTable,
-    selectItemTable,
-    handleEdit,
-    setSelectedItems,
-    selectedItems
-  } = useHandleDataTable({
-    dataTable: certificates
-  })
+  const selectAllTable = () => {
+    if (brands.length === selectedItems.length) {
+      setSelectedItems([])
+    }
+    else {
+      const all = brands.map((item: BrandType) => item.id)
+      setSelectedItems(all)
+    }
+  }
+
+  const selectItemTable = (value: number) => {
+    if (selectedItems.includes(value)) return setSelectedItems(selectedItems.filter((item: any) => item !== value))
+    setSelectedItems([...selectedItems, value])
+  }
+
+  const handleEdit = (value: number) => {
+    navigate(`${path.brand}/${value}`)
+  }
 
   const handleDelete = (id: number) => {
-    dispatch(deleteCertificateRequest({
+    dispatch(deleteBrandRequest({
       ids: [id],
       callback: () => {
-        dispatch(getCertificateRequest({
+        dispatch(getBrandRequest({
           page: 0,
           rowsPerPage: 10,
           search: '',
@@ -74,10 +83,10 @@ const CertificateContainer = () => {
   }
 
   const handleDeleteMulti = () => {
-    dispatch(deleteCertificateRequest({
+    dispatch(deleteBrandRequest({
       ids: selectedItems,
       callback: () => {
-        dispatch(getCertificateRequest({
+        dispatch(getBrandRequest({
           page: 0,
           rowsPerPage: 10,
           search: '',
@@ -88,26 +97,19 @@ const CertificateContainer = () => {
     }))
   }
 
-  const renderBodyTable = () => certificates?.map((row: CertificateType) => ({
-    id: row?.id,
-    name: <Link component={RouterLink} to={`${path.certificates}/${row?.id}`} variant="subtitle2" noWrap>
-      {row?.name}
-    </Link>,
-    mfi_account_number: row?.mfi_account_number,
-    company_name: row?.company_name,
-    csr: <ToolTipRow title={row?.csr} />,
-    key: <ToolTipRow title={row?.key} />,
-    certificate: <ToolTipRow title={row?.certificate} />,
+  const renderBodyTable = () => brands?.map((row: BrandType) => ({
+    id: row.id,
+    name: row.name,
     created_at: dayjs(row?.created_at).format('MM-DD-YY h:mm A'),
     updated_at: dayjs(row?.updated_at).format('MM-DD-YY h:mm A'),
     action: <MenuAction >
-      <MenuItem onClick={() => handleDelete(row?.id)}
+      <MenuItem onClick={() => handleDelete(row.id)}
         sx={{ color: 'error.main' }}
       >
         <Iconify icon={'eva:trash-2-outline'} />
         Delete
       </MenuItem>
-      <MenuItem onClick={() => handleEdit(path.certificates, row?.id)}>
+      <MenuItem onClick={() => handleEdit(row.id)}>
         <Iconify icon={'eva:edit-fill'} />
         Update
       </MenuItem>
@@ -115,7 +117,7 @@ const CertificateContainer = () => {
   }));
 
   useEffect(() => {
-    dispatch(getCertificateRequest({
+    dispatch(getBrandRequest({
       page,
       rowsPerPage,
       search: debouncedSearchTerm,
@@ -124,22 +126,22 @@ const CertificateContainer = () => {
   }, [dispatch, debouncedSearchTerm, filter, page, rowsPerPage])
 
   return (
-    <Page title="Certificate List">
+    <Page title="Brand List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Certificate List"
+          heading="Brand List"
           links={[
             { name: 'Dashboard', href: '/' },
-            { name: 'Certificate List' },
+            { name: 'Brand' },
           ]}
           action={
             <Button
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
               component={RouterLink}
-              to={path.newCertificate}
+              to={path.newBrand}
             >
-              New Certificate
+              New Brand
             </Button>
           }
         />
@@ -178,4 +180,4 @@ const CertificateContainer = () => {
   )
 }
 
-export default CertificateContainer
+export default BrandsContainer

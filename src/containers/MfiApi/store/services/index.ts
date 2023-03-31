@@ -19,3 +19,6 @@ export const editMfiApiService = async (data: any) =>
 
 export const getMfiApiDetailService = async (id: string) =>
   await AxiosClientInstance.get(`/api/mfi-api/${id}`);
+
+export const requestMfiApiService = async (data: any) =>
+  await AxiosClientInstance.post(`/api/mfi-api/request`, data);

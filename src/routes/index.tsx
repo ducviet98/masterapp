@@ -76,6 +76,10 @@ export default function Router() {
         { path: path.mfiApi, element: <MfiApi /> },
         { path: path.newMfiApi, element: <NewMfiApi /> },
         { path: path.editMfiApi, element: <EditMfiApi /> },
+
+        { path: path.brand, element: <Brand /> },
+        { path: path.newBrand, element: <NewBrand /> },
+        { path: path.editBrand, element: <EditBrand /> },
       ],
     },
     // page Error
@@ -113,5 +117,9 @@ const EditMfiToken = Loadable(lazy(() => import('src/containers/MfiToken/view/Ed
 const MfiApi = Loadable(lazy(() => import('src/containers/MfiApi')));
 const NewMfiApi = Loadable(lazy(() => import('src/containers/MfiApi/view/NewMfiApi')));
 const EditMfiApi = Loadable(lazy(() => import('src/containers/MfiApi/view/EditMfiApi')));
+
+const Brand = Loadable(lazy(() => import('src/containers/Brand')));
+const NewBrand = Loadable(lazy(() => import('src/containers/Brand/view/NewBrand')));
+const EditBrand = Loadable(lazy(() => import('src/containers/Brand/view/EditBrand')));
 
 const NotFound = Loadable(lazy(() => import('src/pages/Page404')));

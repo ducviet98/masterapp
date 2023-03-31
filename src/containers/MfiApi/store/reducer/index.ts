@@ -9,6 +9,7 @@ export const initialState = {
   errors: '',
   mfiApiDetail: {},
   isLoadingAction: false,
+  requestApi: null
 };
 
 const mfiApiReducer = (state = initialState, { type, payload }: any) =>
@@ -70,6 +71,21 @@ const mfiApiReducer = (state = initialState, { type, payload }: any) =>
       case types.GET_MFI_API_DETAIL_SUCCESS:
         draft.isLoading = false;
         draft.mfiApiDetail = payload;
+        break;
+
+      // REQUEST_MFI_API_REQUEST
+      case types.REQUEST_MFI_API_REQUEST:
+        draft.isLoadingAction = true;
+        break;
+      case types.REQUEST_MFI_API_FAIL:
+        draft.isLoadingAction = false;
+        break;
+      case types.REQUEST_MFI_API_SUCCESS:
+        draft.isLoadingAction = false;
+        draft.requestApi = payload;
+        break;
+      case types.REMOVE_MFI_API_REQUEST:
+        draft.requestApi = null;
         break;
       default:
         break;

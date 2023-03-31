@@ -5,17 +5,17 @@ import { formatPage } from 'src/utils/formatPage';
 
 export const getMfiTokenService = async (data: ParamsType) =>
   await AxiosClientInstance.get(
-    `/api/mfi-tokens?search=${data.search}&limit=${data.rowsPerPage}&offset=${formatPage(data.rowsPerPage, data.page)}&ordering=${data.ordering}`
+    `/api/mfi-token?search=${data.search}&limit=${data.rowsPerPage}&offset=${formatPage(data.rowsPerPage, data.page)}&ordering=${data.ordering}`
   );
 
 export const createMfiTokenService = async (data: any) =>
-  await AxiosClientInstance.post(`/api/mfi-tokens`, data);
+  await AxiosClientInstance.post(`/api/mfi-token`, data);
 
 export const deleteMfiTokenService = async (data: any) =>
-  await AxiosClientInstance.delete(`/api/mfi-tokens/${data}`);
+  await AxiosClientInstance.delete(`/api/mfi-token/${data}`);
 
 export const editMfiTokenService = async (data: any) =>
-  await AxiosClientInstance.put(`/api/mfi-tokens/${data.id}`, data);
+  await AxiosClientInstance.put(`/api/mfi-token/${data.id}`, data);
 
 export const getMfiTokenDetailService = async (id: string) =>
-  await AxiosClientInstance.get(`/api/mfi-tokens/${id}`);
+  await AxiosClientInstance.get(`/api/mfi-token/${id}`);
