@@ -7,20 +7,20 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import HeaderBreadcrumbs from "src/components/HeaderBreadcrumbs";
 import Iconify from "src/components/Iconify";
 import Page from "src/components/Page";
-import { TableComp } from 'src/components/table';
 import Toolbar from "src/containers/MfiToken/components/Toolbar";
-import { FILTER_OPTIONS, headerTable } from 'src/containers/MfiToken/constants/index';
 import reducer from 'src/containers/MfiToken/store/reducer';
 import saga from 'src/containers/MfiToken/store/sagas';
+import useSettings from "src/hooks/useSettings";
+import ToolTipRow from "../Certificates/components/TooltipRow";
+import { TableComp } from 'src/components/table';
+import { FILTER_OPTIONS, headerTable } from 'src/containers/MfiToken/constants/index';
 import { makeSelectMfiToken, makeSelectIsLoading, makeSelectTotal } from "src/containers/MfiToken/store/selectors";
 import { usePagination } from "src/hooks/usePagination";
-import useSettings from "src/hooks/useSettings";
 import { useInjectReducer } from "src/utils/injectReducer";
 import { useInjectSaga } from "src/utils/injectSaga";
 import { MenuAction } from "./components/MenuAction";
 import { path } from 'src/constants/path'
 import { deleteMfiTokenRequest, getMfiTokenRequest } from "./store/actions";
-import ToolTipRow from "../Certificates/components/TooltipRow";
 import { MFiTokenType } from "./interfaces";
 
 const MfiContainer = () => {
@@ -108,6 +108,7 @@ const MfiContainer = () => {
     base64_token: <ToolTipRow title={row.base64_token} />,
     crc32_in_hex: row.crc32_in_hex,
     ppid: row.ppid,
+    request_id: row.request_id,
     created_at: dayjs(row.created_at).format('MM-DD-YY h:mm A'),
     updated_at: dayjs(row.updated_at).format('MM-DD-YY h:mm A'),
     action: <MenuAction >

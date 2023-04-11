@@ -8,4 +8,5 @@ export type MFiTokenType = {
   ppid: string,
   created_at: string,
   updated_at: string,
+  request_id: string,
 }

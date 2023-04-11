@@ -24,6 +24,10 @@ export const headerTable = [
     label: 'ppid',
   },
   {
+    id: 'request_id',
+    label: 'Request id',
+  },
+  {
     id: 'created_at',
     label: 'Created at',
   },
@@ -38,7 +42,6 @@ export const headerTable = [
 ]
 
 export const FILTER_OPTIONS = [
-  'name',
   'created_at',
   'updated_at',
 ];

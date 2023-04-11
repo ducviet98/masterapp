@@ -17,7 +17,7 @@ const EditCertificate = () => {
   useInjectReducer({ key: 'mfiToken', reducer });
   useInjectSaga({ key: 'mfiToken', saga });
 
-  const mfiTokenDetail = useSelector(makeSelectMfiTokenDetail());
+  const mfiDetail = useSelector(makeSelectMfiTokenDetail());
 
   const { id } = useParams<{
     id: string;
@@ -37,10 +37,10 @@ const EditCertificate = () => {
           links={[
             { name: 'Dashboard', href: '/' },
             { name: 'MFI Tokens', href: '/mfi-token' },
-            { name: mfiTokenDetail.name },
+            { name: mfiDetail?.name },
           ]}
         />
-        <FormMfiToken isEdit={true} oldData={mfiTokenDetail} idDevice={id} />
+        <FormMfiToken isEdit={true} oldData={mfiDetail} idDevice={id} />
       </Container>
     </Page>
   );
