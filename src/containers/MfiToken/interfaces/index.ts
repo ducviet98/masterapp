@@ -1,6 +1,8 @@
+import { CertificateType } from "src/containers/Certificates/interfaces";
+
 export type MFiTokenType = {
   id: number,
-  certificate_id: number,
+  certificate: CertificateType,
   name: string,
   token_id: string,
   base64_token: string,

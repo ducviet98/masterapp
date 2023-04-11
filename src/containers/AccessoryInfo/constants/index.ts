@@ -4,6 +4,10 @@ export const headerTable = [
     label: 'ID',
   },
   {
+    id: 'name',
+    label: 'Name',
+  },
+  {
     id: 'cid',
     label: 'CID',
   },

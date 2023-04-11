@@ -65,7 +65,7 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
   const defaultValues = useMemo(
     () => ({
       name: oldData?.name || '',
-      certificate_id: oldData?.certificate_id || '',
+      certificate_id: oldData?.certificate || '',
       ppid: oldData?.ppid || '',
     }),
     [oldData]
@@ -74,7 +74,7 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
   const defaultValuesEdit = useMemo(
     () => ({
       name: oldData?.name || '',
-      certificate_id: oldData?.certificate_id || '',
+      certificate_id: oldData?.certificate || '',
       ppid: oldData?.ppid || '',
       request_id: oldData?.request_id || ''
     }),

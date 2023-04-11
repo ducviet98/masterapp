@@ -1,5 +1,6 @@
 export type AccessoryInfoType = {
   id: number;
+  name: string;
   mfi_token_id: number;
   setup_id: string;
   setup_code: string;

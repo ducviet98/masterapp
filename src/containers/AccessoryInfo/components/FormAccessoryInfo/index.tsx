@@ -25,6 +25,7 @@ import { makeSelectIsLoadingAction } from '../../store/selectors';
 import { MFiTokenType } from 'src/containers/MfiToken/interfaces';
 
 const schema = Yup.object().shape({
+  name: Yup.string().required('Name is required'),
   cid: Yup.number().min(0).max(10).required('CID is required').typeError('CID is required'),
   mfi_token_id: Yup
     .object()
@@ -57,6 +58,7 @@ const FormAccessoryInfo = () => {
     () => ({
       mfi_token_id: null,
       cid: '',
+      name: ''
     }),
     []
   );
@@ -126,6 +128,7 @@ const FormAccessoryInfo = () => {
               }}
             >
               <RHFTextField type="number" name="cid" label="CID" />
+              <RHFTextField name="name" label="Name" />
               <RHFAutocomplete
                 valueSearch={search || ''}
                 onChangeSearch={handleSearch}

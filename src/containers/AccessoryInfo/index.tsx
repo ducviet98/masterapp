@@ -47,6 +47,7 @@ const AccessoryInfo = () => {
 
   const renderBodyTable = () => accessories?.map((row: AccessoryInfoType) => ({
     id: row.id,
+    name: row.name,
     cid: row.cid,
     mfi_token_id: row.mfi_token_id,
     product_data: <ToolTipRow title={row.product_data} />,
