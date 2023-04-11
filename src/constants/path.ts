@@ -20,5 +20,8 @@ export const path = {
 
   brand: '/brand',
   editBrand: '/brand/:id',
-  newBrand: '/brand/new'
+  newBrand: '/brand/new',
+
+  accessoryInfo: '/accessory-info',
+  newAccessoryInfo: '/accessory-info/new',
 };

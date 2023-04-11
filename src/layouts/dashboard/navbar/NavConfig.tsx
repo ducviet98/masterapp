@@ -16,6 +16,7 @@ const ICONS = {
   mfiToken: getIcon('ic_blog'),
   mfiApi: getIcon('ic_analytics'),
   brands: getIcon('ic_cart'),
+  accessory: getIcon('ic_kanban'),
 };
 
 const navConfig = [
@@ -23,11 +24,12 @@ const navConfig = [
     subheader: 'Menu',
     items: [
       { title: 'App', path: '/app', icon: ICONS.dashboard },
-      { title: 'devices', path: '/devices', icon: ICONS.devices },
-      { title: 'certificates', path: '/certificates', icon: ICONS.certificates },
-      { title: 'MFIToken', path: '/mfi-token', icon: ICONS.mfiToken },
-      { title: 'MFIApi', path: '/mfi-api', icon: ICONS.mfiApi },
+      { title: 'Devices', path: '/devices', icon: ICONS.devices },
+      { title: 'Certificates', path: '/certificates', icon: ICONS.certificates },
+      { title: 'MFI Token', path: '/mfi-token', icon: ICONS.mfiToken },
+      { title: 'MFI API', path: '/mfi-api', icon: ICONS.mfiApi },
       { title: 'Brand', path: '/brand', icon: ICONS.brands },
+      { title: 'Accessory Info', path: '/accessory-info', icon: ICONS.accessory }
     ],
   }
 ];

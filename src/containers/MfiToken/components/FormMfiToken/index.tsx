@@ -54,6 +54,7 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
   const listDevice: DeviceUser[] = useSelector(makeSelectListDevice())
 
   const {
+    rowsPerPage,
     debouncedSearchTerm,
     search,
     handleSearch,
@@ -64,15 +65,25 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
   const defaultValues = useMemo(
     () => ({
       name: oldData?.name || '',
-      certificate_id: oldData?.certificate_id || '',
+      certificate_id: oldData?.certificate || '',
       ppid: oldData?.ppid || '',
+    }),
+    [oldData]
+  );
+
+  const defaultValuesEdit = useMemo(
+    () => ({
+      name: oldData?.name || '',
+      certificate_id: oldData?.certificate || '',
+      ppid: oldData?.ppid || '',
+      request_id: oldData?.request_id || ''
     }),
     [oldData]
   );
 
   const methods = useForm<any>({
     resolver: yupResolver(schema),
-    defaultValues,
+    defaultValues: isEdit ? defaultValuesEdit : defaultValues,
   });
 
   const {
@@ -123,10 +134,31 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
 
   };
 
+  const handleScroll: React.EventHandler<React.UIEvent<HTMLUListElement>> = (event) => {
+    const listboxNode = event.currentTarget;
+
+    const position = listboxNode.scrollTop + listboxNode.clientHeight;
+
+    if (listboxNode.scrollHeight - position <= 1) {
+      dispatch(getCertificateRequest({
+        page: 0,
+        rowsPerPage: rowsPerPage + 10,
+        search: debouncedSearchTerm,
+      }))
+      dispatch(
+        getUserDeviceRequest({
+          page: 0,
+          rowsPerPage: rowsPerPage + 10,
+          search: debouncedSearchTerm,
+        })
+      );
+    }
+  };
+
   useEffect(() => {
     dispatch(getCertificateRequest({
       page: 0,
-      rowsPerPage: 10,
+      rowsPerPage: 6,
       search: debouncedSearchTerm,
     }))
   }, [dispatch, debouncedSearchTerm])
@@ -135,7 +167,7 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
     dispatch(
       getUserDeviceRequest({
         page: 0,
-        rowsPerPage: 10,
+        rowsPerPage: 6,
         search: debouncedSearchTerm,
       })
     );
@@ -166,6 +198,7 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
                 getOptionLabel={(option: CertificateType) => option?.name || ''}
                 label="certificate_id"
                 setSearch={setSearch}
+                handleScroll={handleScroll}
               />
               <RHFAutocomplete
                 valueSearch={search || ''}
@@ -175,7 +208,12 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
                 getOptionLabel={(option: DeviceUser) => option?.ppid || ''}
                 label="ppid"
                 setSearch={setSearch}
+                handleScroll={handleScroll}
               />
+
+              {
+                isEdit && <RHFTextField name="request_id" label="Request id" />
+              }
 
             </Box>
             <Stack
