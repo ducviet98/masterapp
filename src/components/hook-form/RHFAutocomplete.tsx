@@ -4,7 +4,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { Autocomplete, TextField } from '@mui/material';
 
 
-export default function RHFAutocomplete({ name, valueSearch, onChangeSearch, label, setSearch, ...other }: any) {
+export default function RHFAutocomplete({ name, valueSearch, onChangeSearch, label, setSearch, handleScroll, error, helperText, ...other }: any) {
   const { control } = useFormContext();
 
   return (
@@ -23,15 +23,19 @@ export default function RHFAutocomplete({ name, valueSearch, onChangeSearch, lab
           renderInput={(params) => (
             <TextField
               {...params}
+              name={name}
               variant="outlined"
               error={!!error}
-              helperText={error?.message}
+              helperText={helperText}
               value={valueSearch || ''}
               onChange={onChangeSearch}
               fullWidth
               label={label}
             />
           )}
+          ListboxProps={{
+            onScroll: handleScroll,
+          }}
           {...other}
         />
       )}
