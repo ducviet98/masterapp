@@ -21,9 +21,9 @@ import {
   makeSelectIsLoading,
   makeSelectDeviceDetail,
 } from '../../store/selectors';
-import { editDeviceType } from '../../interface';
+import { EditDeviceType } from '../../interface';
 
-const EditDevice = ({ isLoading, deviceDetail }: editDeviceType) => {
+const EditDevice = ({ isLoading, deviceDetail }: EditDeviceType) => {
   useInjectReducer({ key: 'device', reducer });
   useInjectSaga({ key: 'device', saga });
 

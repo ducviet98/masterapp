@@ -6,6 +6,7 @@ import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+
 import {
   FormProvider, RHFTextField
 } from 'src/components/hook-form';
@@ -19,7 +20,6 @@ import reducerDevice from 'src/containers/Devices/store/reducer';
 import sagaDevice from 'src/containers/Devices/store/sagas';
 import { makeSelectCertificate } from 'src/containers/Certificates/store/selectors';
 import { makeSelectListDevice } from 'src/containers/Devices/store/selectors';
-
 import { usePagination } from 'src/hooks/usePagination';
 import { useInjectReducer } from 'src/utils/injectReducer';
 import { useInjectSaga } from 'src/utils/injectSaga';
@@ -64,18 +64,18 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
 
   const defaultValues = useMemo(
     () => ({
-      name: oldData?.name || '',
-      certificate_id: oldData?.certificate || '',
-      ppid: oldData?.ppid || '',
+      name: '',
+      certificate_id: '',
+      device: '',
     }),
-    [oldData]
+    []
   );
 
   const defaultValuesEdit = useMemo(
     () => ({
       name: oldData?.name || '',
       certificate_id: oldData?.certificate || '',
-      ppid: oldData?.ppid || '',
+      device: oldData?.device || '',
       request_id: oldData?.request_id || ''
     }),
     [oldData]
@@ -100,7 +100,7 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
       })
     }
 
-    if (!values.ppid?.ppid) {
+    if (!values.device?.ppid) {
       return setError('ppid', {
         type: 'custom',
         message: 'ppid id is required',
@@ -113,7 +113,7 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
           ...values,
           idDevice,
           certificate_id: values.certificate_id.id,
-          ppid: values.ppid.ppid,
+          device: values.device.ppid,
           callback: () => {
             navigate(path.mfiToken)
           },
@@ -124,7 +124,7 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
       return dispatch(createMfiTokenRequest({
         ...values,
         certificate_id: values.certificate_id.id,
-        ppid: values.ppid.ppid,
+        device: values.device.ppid,
         callback: () => {
           reset();
           navigate(path.mfiToken)
@@ -204,9 +204,9 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
                 valueSearch={search || ''}
                 onChangeSearch={handleSearch}
                 options={listDevice}
-                name="ppid"
+                name="device"
                 getOptionLabel={(option: DeviceUser) => option?.ppid || ''}
-                label="ppid"
+                label="device"
                 setSearch={setSearch}
                 handleScroll={handleScroll}
               />

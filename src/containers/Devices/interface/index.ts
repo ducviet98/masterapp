@@ -1,4 +1,4 @@
-export interface deviceItem {
+export interface IDeviceItem {
   brand: number;
   brand_name: string;
   category: number;
@@ -19,7 +19,7 @@ export type Key = {
   [key: string]: string;
 };
 
-export interface deviceDetailType {
+export interface DeviceDetailType {
   id: number;
   brand_name: string;
   category_name: string;
@@ -37,14 +37,14 @@ export interface deviceDetailType {
   certificate: string;
 }
 
-export interface editDeviceType {
+export interface EditDeviceType {
   isLoading: boolean;
-  deviceDetail: deviceDetailType;
+  deviceDetail: DeviceDetailType;
 }
 
 export interface FormUserType {
   isEdit: boolean;
-  oldData?: deviceDetailType;
+  oldData?: DeviceDetailType;
   idDevice?: string;
 }
 
