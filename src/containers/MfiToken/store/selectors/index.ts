@@ -19,10 +19,8 @@ const makeSelectTotal = () =>
 const makeSelectMfiToken = () =>
   createSelector(certificateState, (state) => state.mfiTokens);
 
-
 const makeSelectMfiTokenDetail = () =>
-  createSelector(certificateState, (state) => state.mfiTokenDetail);
-
+  createSelector(certificateState, (state) => state.mfiDetail);
 
 export {
   makeSelectIsLoading,
