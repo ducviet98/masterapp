@@ -12,9 +12,6 @@ const OrganizationProvider = ({ children }: Props) => {
   const currentOrganizations = CookieHandlerInstance.getCookie('current_organizations');
 
   useEffect(() => {
-    console.log('isAuth', isAuth);
-
-    console.log('currentOrganizations', currentOrganizations);
 
     if (!isAuth) {
       setTimeout(() => history.push('/auth/login'), 0);
