@@ -18,6 +18,7 @@ import { Provider } from 'react-redux';
 //
 import App from 'src/containers/App/index';
 import configureStore from './store/configureStore';
+import { OrganizationProvider } from 'src/components/OrganizationProvider';
 
 // ----------------------------------------------------------------------
 
@@ -28,14 +29,16 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 root.render(
   <Provider store={store}>
-    <HelmetProvider>
-      <SettingsProvider>
-        <CollapseDrawerProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </CollapseDrawerProvider>
-      </SettingsProvider>
-    </HelmetProvider>
+    <OrganizationProvider>
+      <HelmetProvider>
+        <SettingsProvider>
+          <CollapseDrawerProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </CollapseDrawerProvider>
+        </SettingsProvider>
+      </HelmetProvider>
+    </OrganizationProvider>
   </Provider>
 );

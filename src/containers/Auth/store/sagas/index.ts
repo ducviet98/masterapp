@@ -4,17 +4,14 @@ import { toast } from 'react-toastify';
 import AxiosClientInstance from 'src/utils/axios';
 import CookieHandlerInstance from 'src/utils/cookie';
 import { path } from 'src/constants/path';
+import history from 'src/utils/history';
 
 import * as actionTypes from '../actions';
 import * as types from '../constants';
-import {
-  loginService,
-  refreshTokenService,
-  registerService,
-} from '../services';
-
+import { loginService, refreshTokenService, registerService } from '../services';
+import { getOrganizationService } from 'src/containers/Organization/store/services';
 interface IKey {
-  [key: string]: any
+  [key: string]: any;
 }
 
 function* registerSaga({ payload }: any) {
@@ -34,12 +31,22 @@ function* registerSaga({ payload }: any) {
 }
 
 function* loginSaga({ payload }: any) {
-  const { email, password, isRemember, callback } = payload;
+  const { email, password, isRemember, callback, callbackOrg } = payload;
   try {
     const res: IKey = yield call(loginService, { email, password });
     CookieHandlerInstance.setCookie('token', res.data.access);
     CookieHandlerInstance.setCookie('refreshToken', res.data.refresh);
     AxiosClientInstance.setHeader(res.data.access);
+
+    const { data } = yield call(getOrganizationService);
+
+    if (data.count === 0) {
+      return callbackOrg();
+    }
+
+    CookieHandlerInstance.setCookie('current_organizations', data.results[0].id);
+    AxiosClientInstance.setHeaderOrganization(data.results[0].id);
+
     if (isRemember === true) {
       const remember = JSON.stringify({ email, password, isRemember });
       yield localStorage.setItem('remember', remember);
@@ -74,6 +81,7 @@ function* logoutSaga() {
   try {
     CookieHandlerInstance.removeCookie('token');
     CookieHandlerInstance.removeCookie('refreshToken');
+    CookieHandlerInstance.removeCookie('current_organizations');
     window.location.replace(path.login);
     yield put(actionTypes.logoutSuccess());
   } catch (error: any) {
