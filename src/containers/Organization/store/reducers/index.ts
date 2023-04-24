@@ -7,6 +7,8 @@ export const initialState = {
   total: 0,
   organizationData: [],
   error: '',
+  organizationMember: [],
+  roleUser: [],
 };
 
 const organizationReduce = (state = initialState, { type, payload }: any) =>
@@ -29,6 +31,33 @@ const organizationReduce = (state = initialState, { type, payload }: any) =>
         draft.organizationData = [];
         draft.total = 0;
         draft.error = payload.data;
+        break;
+      case types.GET_ORGANIZATION_MEMBER_REQUEST:
+        draft.isLoading = true;
+        draft.total = 0;
+        draft.organizationMember = [];
+        draft.error = '';
+        break;
+      case types.GET_ORGANIZATION_MEMBER_SUCCESS:
+        draft.isLoading = false;
+        draft.organizationMember = payload.results;
+        draft.total = payload.count;
+        draft.error = '';
+        break;
+      case types.GET_ORGANIZATION_MEMBER_FAIL:
+        draft.isLoading = false;
+        draft.organizationMember = [];
+        draft.total = 0;
+        draft.error = payload.data;
+        break;
+      case types.GET_ROLE_ORGANIZATION_MEMBER_REQUEST:
+        draft.roleUser = [];
+        break;
+      case types.GET_ROLE_ORGANIZATION_MEMBER_SUCCESS:
+        draft.roleUser = payload.results;
+        break;
+      case types.GET_ROLE_ORGANIZATION_MEMBER_FAIL:
+        draft.roleUser = [];
         break;
       default:
         break;

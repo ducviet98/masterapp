@@ -7,7 +7,12 @@ import AxiosClientInstance from 'src/utils/axios';
 import * as actionTypes from '../actions';
 import * as types from '../constants';
 
-import { getOrganizationService, createOrganizationService } from '../services';
+import {
+  getOrganizationService,
+  createOrganizationService,
+  getOrganizationMemberService,
+  getRoleOrganizationService,
+} from '../services';
 
 function* getOrganizationSaga() {
   try {
@@ -57,8 +62,32 @@ function* switchOrganizationSaga({ payload }: any) {
   }
 }
 
+function* getOrganizationMemberSaga({ payload }: any) {
+  try {
+    const { data } = yield call(getOrganizationMemberService, payload);
+    yield put(actionTypes.getOrganizationMemberSuccess(data));
+  } catch (error) {
+    yield put(actionTypes.getOrganizationMemberFail(error));
+    toast.error('Get Organization Member Fail !');
+  }
+}
+
+function* getRoleOrganizationMemberSaga({ payload }: any) {
+  try {
+    const idOrganizations = CookieHandlerInstance.getCookie('current_organizations');
+    yield AxiosClientInstance.setHeaderOrganization(idOrganizations);
+    const { data } = yield call(getRoleOrganizationService);
+    yield put(actionTypes.getRoleOrganizationMemberSuccess(data));
+  } catch (error) {
+    yield put(actionTypes.getRoleOrganizationMemberFail(error));
+    toast.error('Get Role Organization Member Fail !');
+  }
+}
+
 export default function* watchApp() {
   yield takeLatest(types.GET_ORGANIZATION_REQUEST, getOrganizationSaga);
   yield takeLatest(types.CREATE_ORGANIZATION_REQUEST, createOrganizationSaga);
   yield takeLatest(types.SWITCH_ORGANIZATION_REQUEST, switchOrganizationSaga);
+  yield takeLatest(types.GET_ORGANIZATION_MEMBER_REQUEST, getOrganizationMemberSaga);
+  yield takeLatest(types.GET_ROLE_ORGANIZATION_MEMBER_REQUEST, getRoleOrganizationMemberSaga);
 }

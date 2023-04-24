@@ -43,3 +43,32 @@ export const switchOrganizationFail = (data: any) => ({
   type: types.SWITCH_ORGANIZATION_FAIL,
   payload: data,
 });
+
+export const getOrganizationMemberRequest = (data: any) => ({
+  type: types.GET_ORGANIZATION_MEMBER_REQUEST,
+  payload: data,
+});
+
+export const getOrganizationMemberSuccess = (data: any) => ({
+  type: types.GET_ORGANIZATION_MEMBER_SUCCESS,
+  payload: data,
+});
+
+export const getOrganizationMemberFail = (data: any) => ({
+  type: types.GET_ORGANIZATION_MEMBER_FAIL,
+  payload: data,
+});
+
+export const getRoleOrganizationMemberRequest = () => ({
+  type: types.GET_ROLE_ORGANIZATION_MEMBER_REQUEST,
+});
+
+export const getRoleOrganizationMemberSuccess = (data: any) => ({
+  type: types.GET_ROLE_ORGANIZATION_MEMBER_SUCCESS,
+  payload: data,
+});
+
+export const getRoleOrganizationMemberFail = (data: any) => ({
+  type: types.GET_ROLE_ORGANIZATION_MEMBER_FAIL,
+  payload: data,
+});

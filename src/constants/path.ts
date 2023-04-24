@@ -25,5 +25,7 @@ export const path = {
   accessoryInfo: '/accessory-info',
   newAccessoryInfo: '/accessory-info/new',
 
-  createOrganization: '/organization/new'
+  createOrganization: '/organization/new',
+  organization: '/organization',
+  editOrganization: '/organization/:id'
 };

@@ -17,6 +17,7 @@ const ICONS = {
   mfiApi: getIcon('ic_analytics'),
   brands: getIcon('ic_cart'),
   accessory: getIcon('ic_kanban'),
+  organization: getIcon('ic_organization')
 };
 
 const navConfig = [
@@ -29,7 +30,9 @@ const navConfig = [
       { title: 'MFI Token', path: '/mfi-token', icon: ICONS.mfiToken },
       { title: 'MFI API', path: '/mfi-api', icon: ICONS.mfiApi },
       { title: 'Brand', path: '/brand', icon: ICONS.brands },
-      { title: 'Accessory Info', path: '/accessory-info', icon: ICONS.accessory }
+      { title: 'Accessory Info', path: '/accessory-info', icon: ICONS.accessory },
+      { title: 'Organization', path: '/organization', icon: ICONS.organization },
+      
     ],
   }
 ];

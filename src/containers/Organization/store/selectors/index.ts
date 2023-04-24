@@ -14,9 +14,17 @@ const makeSelectTotalOrganization = () => createSelector(organizationState, (sta
 const makeSelectOrganization = () =>
   createSelector(organizationState, (state) => state.organizationData);
 
+const makeSelectOrganizationMember = () =>
+  createSelector(organizationState, (state) => state.organizationMember);
+
+const makeSelectRoleOrganizationMember = () =>
+  createSelector(organizationState, (state) => state.roleUser);
+
 export {
   makeSelectIsLoadingOrganization,
   makeSelectErrorOrganization,
   makeSelectTotalOrganization,
   makeSelectOrganization,
+  makeSelectOrganizationMember,
+  makeSelectRoleOrganizationMember,
 };
