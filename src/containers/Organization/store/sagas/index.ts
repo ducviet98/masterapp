@@ -37,17 +37,18 @@ function* createOrganizationSaga({ payload }: any) {
   }
 }
 
-function* switchOrganizationSaga({payload}: any) {
+function* switchOrganizationSaga({ payload }: any) {
   try {
-    CookieHandlerInstance.setCookie('current_organizations', payload.id);
-    AxiosClientInstance.setHeaderOrganization(payload.id);
-    payload.callback()
+    yield CookieHandlerInstance.setCookie('current_organizations', payload.id);
+    yield AxiosClientInstance.setHeaderOrganization(payload.id);
+    payload.callback();
   } catch (error) {
-    
+    yield put(actionTypes.switchOrganizationFail(error));
   }
 }
 
 export default function* watchApp() {
   yield takeLatest(types.GET_ORGANIZATION_REQUEST, getOrganizationSaga);
   yield takeLatest(types.CREATE_ORGANIZATION_REQUEST, createOrganizationSaga);
+  yield takeLatest(types.SWITCH_ORGANIZATION_REQUEST, switchOrganizationSaga);
 }

@@ -14,6 +14,7 @@ const OrganizationProvider = ({ children }: Props) => {
   useEffect(() => {
 
     if (!isAuth) {
+      
       setTimeout(() => history.push('/auth/login'), 0);
     } else if (isAuth && !currentOrganizations) {
       setTimeout(() => history.push('/organization/new'), 0);

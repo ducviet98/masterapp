@@ -7,6 +7,7 @@ import { path } from 'src/constants/path';
 import history from 'src/utils/history';
 
 import * as actionTypes from '../actions';
+import * as actionTypesOrganization from 'src/containers/Organization/store/actions';
 import * as types from '../constants';
 import { loginService, refreshTokenService, registerService } from '../services';
 import { getOrganizationService } from 'src/containers/Organization/store/services';
@@ -46,6 +47,8 @@ function* loginSaga({ payload }: any) {
 
     CookieHandlerInstance.setCookie('current_organizations', data.results[0].id);
     AxiosClientInstance.setHeaderOrganization(data.results[0].id);
+
+    yield put(actionTypesOrganization.getOrganizationSuccess(data));
 
     if (isRemember === true) {
       const remember = JSON.stringify({ email, password, isRemember });
