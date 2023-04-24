@@ -14,11 +14,9 @@ import { HelmetProvider } from 'react-helmet-async';
 import { SettingsProvider } from './contexts/SettingsContext';
 import { CollapseDrawerProvider } from './contexts/CollapseDrawerContext';
 import { Provider } from 'react-redux';
-
 //
 import App from 'src/containers/App/index';
 import configureStore from './store/configureStore';
-
 // ----------------------------------------------------------------------
 
 const initialState = {};

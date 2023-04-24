@@ -8,7 +8,7 @@ import LoadingScreen from '../components/LoadingScreen';
 import GuestGuard from 'src/guards/GuestGuard';
 import AuthGuard from 'src/guards/AuthGuard';
 import cookie from 'src/utils/cookie';
-import { path } from 'src/constants/path'
+import { path } from 'src/constants/path';
 // ----------------------------------------------------------------------
 
 const Loadable = (Component: ElementType) => (props: any) => {
@@ -48,8 +48,12 @@ export default function Router() {
               <Register />
             </GuestGuard>
           ),
-        }
+        },
       ],
+    },
+    {
+      path: path.createOrganization,
+      element: <CreateOrganization />,
     },
     // Dashboard
     {
@@ -106,8 +110,12 @@ const Register = Loadable(lazy(() => import('src/containers/Auth/register')));
 // Dashboard
 const Dashboard = Loadable(lazy(() => import('src/containers/Dashboard/GeneralApp')));
 const Certificates = Loadable(lazy(() => import('src/pages/Certificates')));
-const NewCertificates = Loadable(lazy(() => import('src/containers/Certificates/view/NewCertificate')));
-const EditCertificates = Loadable(lazy(() => import('src/containers/Certificates/view/EditCertificate')));
+const NewCertificates = Loadable(
+  lazy(() => import('src/containers/Certificates/view/NewCertificate'))
+);
+const EditCertificates = Loadable(
+  lazy(() => import('src/containers/Certificates/view/EditCertificate'))
+);
 
 const Devices = Loadable(lazy(() => import('src/pages/Devices')));
 const NewDevices = Loadable(lazy(() => import('src/containers/Devices/view/newDevice')));
@@ -126,6 +134,12 @@ const NewBrand = Loadable(lazy(() => import('src/containers/Brand/view/NewBrand'
 const EditBrand = Loadable(lazy(() => import('src/containers/Brand/view/EditBrand')));
 
 const AccessoryInfo = Loadable(lazy(() => import('src/containers/AccessoryInfo')));
-const NewAccessoryInfo = Loadable(lazy(() => import('src/containers/AccessoryInfo/view/NewAccessoryInfo')));
+const NewAccessoryInfo = Loadable(
+  lazy(() => import('src/containers/AccessoryInfo/view/NewAccessoryInfo'))
+);
 
 const NotFound = Loadable(lazy(() => import('src/pages/Page404')));
+
+const CreateOrganization = Loadable(
+  lazy(() => import('src/containers/Organization/views/CreateOrganization'))
+);

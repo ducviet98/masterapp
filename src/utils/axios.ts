@@ -49,10 +49,7 @@ class AxiosClient {
         return response;
       },
       (error: any) => {
-        if (
-          error?.response?.data.errors &&
-          Array.isArray(error.response.data.errors)
-        ) {
+        if (error?.response?.data.errors && Array.isArray(error.response.data.errors)) {
           error.response.data.errorsObject = error.response.data.errors.reduce(
             (errorObject: any, item: any) => {
               errorObject[item.field] = item;
@@ -83,12 +80,13 @@ class AxiosClient {
     this.axiosClient.defaults.headers.common.Authorization = '';
   }
 
+  async setHeaderOrganization(params: any) {
+    this.axiosClient.defaults.headers.common['organization'] = params;
+  }
+
   get(resource: string, slug = '', config = {}) {
     const requestURL = isEmpty(slug) ? `${resource}` : `${resource}/${slug}`;
-    return this.axiosClient.get(
-      requestURL,
-      assign(config, this.axiosClient.defaults.headers)
-    );
+    return this.axiosClient.get(requestURL, assign(config, this.axiosClient.defaults.headers));
   }
 
   post(resource: string, data = {}, config = {}) {

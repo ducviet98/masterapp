@@ -1,17 +1,25 @@
-import { Avatar, Box, Divider, MenuItem, Stack, Typography } from '@mui/material';
-// @mui
-import { alpha } from '@mui/material/styles';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { logoutRequest } from 'src/containers/Auth/store/actions';
+import { connect, useDispatch } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { Link, useNavigate } from 'react-router-dom';
+// @mui
+import { Avatar, Box, Divider, MenuItem, Stack, Typography, ListItemText } from '@mui/material';
+import { alpha } from '@mui/material/styles';
+// components
+import CookieHandlerInstance from 'src/utils/cookie';
 import reducer from 'src/containers/Auth/store/reducer';
 import saga from 'src/containers/Auth/store/sagas';
 import { useInjectReducer } from 'src/utils/injectReducer';
 import { useInjectSaga } from 'src/utils/injectSaga';
+import { logoutRequest } from 'src/containers/Auth/store/actions';
+import reducerOrganization from 'src/containers/Organization/store/reducers';
+import sagaOrganization from 'src/containers/Organization/store/sagas';
+import { makeSelectOrganization } from 'src/containers/Organization/store/selectors';
+import { OrganizationType } from 'src/containers/Organization/interface';
+import { switchOrganizationRequest } from 'src/containers/Organization/store/actions';
+
 import { IconButtonAnimate } from '../../../components/animate';
-// components
 import MenuPopover from '../../../components/MenuPopover';
-// components
 
 // ----------------------------------------------------------------------
 
@@ -30,14 +38,20 @@ const MENU_OPTIONS = [
   },
 ];
 
+interface IProps {
+  organization: [OrganizationType];
+}
 // ----------------------------------------------------------------------
 
-export default function AccountPopover() {
-
+const AccountPopover = (props: IProps) => {
+  const { organization } = props;
   useInjectReducer({ key: 'auth', reducer });
   useInjectSaga({ key: 'auth', saga });
-
-  const dispatch = useDispatch()
+  useInjectReducer({ key: 'organization', reducer: reducerOrganization });
+  useInjectSaga({ key: 'organization', saga: sagaOrganization });
+  const currentOrganizations = CookieHandlerInstance.getCookie('current_organizations');
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [open, setOpen] = useState<HTMLElement | null>(null);
 
@@ -51,7 +65,19 @@ export default function AccountPopover() {
 
   const handleLogout = () => {
     dispatch(logoutRequest());
-  }
+  };
+
+  const handleSwitchOrganizations = (item: OrganizationType) => {
+    dispatch(
+      switchOrganizationRequest({
+        id: item.id,
+        callback: () => {
+          navigate('/');
+        },
+      })
+    );
+    handleClose();
+  };
 
   return (
     <>
@@ -104,6 +130,27 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Stack sx={{ p: 1 }}>
+          <MenuItem component={Link} to="/" onClick={handleClose} role="button">
+            <ListItemText primary="My Organizations" />
+          </MenuItem>
+
+          <Stack>
+            {organization?.map((item: OrganizationType) => (
+              <MenuItem
+                key={item?.id}
+                role="button"
+                onClick={() => handleSwitchOrganizations(item)}
+                selected={+item.id === +currentOrganizations}
+              >
+                {item.name}
+              </MenuItem>
+            ))}
+          </Stack>
+        </Stack>
+
+        <Divider sx={{ borderStyle: 'dashed' }} />
+
+        <Stack sx={{ p: 1 }}>
           {MENU_OPTIONS.map((option) => (
             <MenuItem key={option.label} onClick={handleClose}>
               {option.label}
@@ -113,8 +160,16 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <MenuItem onClick={handleLogout} sx={{ m: 1 }}>Logout</MenuItem>
+        <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
+          Logout
+        </MenuItem>
       </MenuPopover>
     </>
   );
-}
+};
+
+const mapStateToProps = createStructuredSelector({
+  organization: makeSelectOrganization(),
+});
+
+export default connect(mapStateToProps)(AccountPopover);
