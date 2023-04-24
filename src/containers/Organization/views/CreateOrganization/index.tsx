@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Stack, Card, Container, Box, Typography } from '@mui/material';
+import { Stack, Container, Box, Typography } from '@mui/material';
 import { createStructuredSelector } from 'reselect';
 import { styled } from '@mui/material/styles';
 
@@ -12,12 +12,11 @@ import { useInjectReducer } from 'src/utils/injectReducer';
 import { useInjectSaga } from 'src/utils/injectSaga';
 import { FormProvider, RHFTextField } from 'src/components/hook-form';
 import Page from 'src/components/Page';
-import history from 'src/utils/history';
 
 import reducer from '../../store/reducers';
 import saga from '../../store/sagas';
 import { makeSelectIsLoadingOrganization } from '../../store/selectors';
-import { createOrganizationRequest, getOrganizationRequest } from '../../store/actions';
+import { createOrganizationRequest } from '../../store/actions';
 
 const organizationSchema = yup.object({
   name: yup.string().required('Name of Organization is required !'),
@@ -44,7 +43,6 @@ const CreateOrganization = (props: OrganizationType) => {
 
   const {
     handleSubmit,
-    // eslint-disable-next-line no-empty-pattern
     formState: {},
   } = methods;
 

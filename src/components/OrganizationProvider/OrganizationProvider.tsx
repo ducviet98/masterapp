@@ -12,12 +12,10 @@ const OrganizationProvider = ({ children }: Props) => {
   const currentOrganizations = CookieHandlerInstance.getCookie('current_organizations');
 
   useEffect(() => {
-
     if (!isAuth) {
-      
-      setTimeout(() => history.push('/auth/login'), 0);
+      return history.push('/auth/login');
     } else if (isAuth && !currentOrganizations) {
-      setTimeout(() => history.push('/organization/new'), 0);
+      return history.push('/organization/new');
     }
   }, [isAuth, currentOrganizations]);
 
