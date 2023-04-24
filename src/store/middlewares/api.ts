@@ -16,7 +16,7 @@ const authenticateMiddleware = (store: any) => (next: any) => (action: any) => {
   if (actionType.includes('_FAIL')) {
     const statusCode = payload.status;
 
-    if (statusCode === 401 || statusCode === 403) {
+    if (statusCode === 401) {
       previousActions.push(action);
       store.dispatch(refreshTokenRequest());
     }
