@@ -1,21 +1,46 @@
-import { ReactNode, useState } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { ReactNode, useState, useEffect } from 'react';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { connect, useDispatch } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+
+import { useInjectReducer } from 'src/utils/injectReducer';
+import { useInjectSaga } from 'src/utils/injectSaga';
 import cookie from 'src/utils/cookie';
+import reducer from 'src/containers/Organization/store/reducers';
+import saga from 'src/containers/Organization/store/sagas';
+import { getOrganizationRequest } from 'src/containers/Organization/store/actions';
+import { makeSelectOrganization } from 'src/containers/Organization/store/selectors';
+import { OrganizationType } from 'src/containers/Organization/interface';
 
 // ----------------------------------------------------------------------
 
 type AuthGuardProps = {
   children: ReactNode;
+  organization: [OrganizationType];
 };
 
-export default function AuthGuard({ children }: AuthGuardProps) {
+const AuthGuard = ({ children, organization }: AuthGuardProps) => {
   const { pathname } = useLocation();
-  console.log('pathname', pathname);
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isAuth = cookie.checkCookie('token');
+  const currentOrganizations = cookie.getCookie('current_organizations');
+  useInjectReducer({ key: 'organization', reducer });
+  useInjectSaga({ key: 'organization', saga });
 
   const [requestedLocation, setRequestedLocation] = useState<string | null>(null);
 
-  if (!cookie.checkCookie('token')) {
+  useEffect(() => {
+      dispatch(getOrganizationRequest());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (isAuth && !currentOrganizations) {
+      navigate('/organization/new');
+    }
+  }, [currentOrganizations, isAuth, navigate]);
+
+  if (!isAuth) {
     if (pathname !== requestedLocation) {
       setRequestedLocation(pathname);
     }
@@ -28,4 +53,10 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   }
 
   return <>{children}</>;
-}
+};
+
+const mapStateToProps = createStructuredSelector({
+  organization: makeSelectOrganization(),
+});
+
+export default connect(mapStateToProps)(AuthGuard);

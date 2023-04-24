@@ -19,6 +19,14 @@ function* getOrganizationSaga() {
       AxiosClientInstance.setHeaderOrganization(currentOrganizations);
     }
 
+    if (data.results.length === 0) {
+      CookieHandlerInstance.removeCookie('current_organizations');
+    }
+
+    if (data.results[0]?.id) {
+      CookieHandlerInstance.setCookie('current_organizations', data.results[0]?.id);
+    }
+
     yield put(actionTypes.getOrganizationSuccess(data));
   } catch (error) {
     yield put(actionTypes.getOrganizationFail(error));
@@ -29,9 +37,10 @@ function* getOrganizationSaga() {
 function* createOrganizationSaga({ payload }: any) {
   try {
     const { data } = yield call(createOrganizationService, payload.name);
-    CookieHandlerInstance.setCookie('current_organizations', data.id);
-    AxiosClientInstance.setHeaderOrganization(data.id);
-    return payload.callback();
+    yield CookieHandlerInstance.setCookie('current_organizations', data.id);
+    yield AxiosClientInstance.setHeaderOrganization(data.id);
+    yield put(actionTypes.createOrganizationSuccess(data));
+    payload.callback();
   } catch (error) {
     yield put(actionTypes.createOrganizationFail(error));
   }
@@ -41,6 +50,7 @@ function* switchOrganizationSaga({ payload }: any) {
   try {
     yield CookieHandlerInstance.setCookie('current_organizations', payload.id);
     yield AxiosClientInstance.setHeaderOrganization(payload.id);
+    yield put(actionTypes.switchOrganizationSuccess(payload));
     payload.callback();
   } catch (error) {
     yield put(actionTypes.switchOrganizationFail(error));

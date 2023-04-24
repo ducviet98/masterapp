@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import AxiosClientInstance from 'src/utils/axios';
 import CookieHandlerInstance from 'src/utils/cookie';
 import { path } from 'src/constants/path';
-import history from 'src/utils/history';
 
 import * as actionTypes from '../actions';
 import * as actionTypesOrganization from 'src/containers/Organization/store/actions';

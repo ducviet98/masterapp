@@ -14,12 +14,9 @@ import { HelmetProvider } from 'react-helmet-async';
 import { SettingsProvider } from './contexts/SettingsContext';
 import { CollapseDrawerProvider } from './contexts/CollapseDrawerContext';
 import { Provider } from 'react-redux';
-
 //
 import App from 'src/containers/App/index';
 import configureStore from './store/configureStore';
-import { OrganizationProvider } from 'src/components/OrganizationProvider';
-
 // ----------------------------------------------------------------------
 
 const initialState = {};
@@ -29,16 +26,14 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 root.render(
   <Provider store={store}>
-    <OrganizationProvider>
-      <HelmetProvider>
-        <SettingsProvider>
-          <CollapseDrawerProvider>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
-          </CollapseDrawerProvider>
-        </SettingsProvider>
-      </HelmetProvider>
-    </OrganizationProvider>
+    <HelmetProvider>
+      <SettingsProvider>
+        <CollapseDrawerProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </CollapseDrawerProvider>
+      </SettingsProvider>
+    </HelmetProvider>
   </Provider>
 );

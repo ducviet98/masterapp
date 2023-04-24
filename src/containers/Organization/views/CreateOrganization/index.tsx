@@ -43,7 +43,7 @@ const CreateOrganization = (props: OrganizationType) => {
 
   const {
     handleSubmit,
-    formState: {},
+    // formState: {},
   } = methods;
 
   const onSubmit = handleSubmit((data) => {
