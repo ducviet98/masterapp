@@ -12,14 +12,16 @@ import {
   createOrganizationService,
   getOrganizationMemberService,
   getRoleOrganizationService,
+  inviteOrganizationMemberService,
+  getDetailOrganizationMemberService,
+  deleteMemberOrganizationService,
+  updateMemberOrganizationService,
 } from '../services';
 
 function* getOrganizationSaga() {
   try {
     const { data } = yield call(getOrganizationService);
-
     const currentOrganizations = CookieHandlerInstance.getCookie('current_organizations');
-
     if (currentOrganizations) {
       AxiosClientInstance.setHeaderOrganization(currentOrganizations);
     }
@@ -31,11 +33,9 @@ function* getOrganizationSaga() {
     if (data.results[0]?.id) {
       CookieHandlerInstance.setCookie('current_organizations', data.results[0]?.id);
     }
-
     yield put(actionTypes.getOrganizationSuccess(data));
   } catch (error) {
     yield put(actionTypes.getOrganizationFail(error));
-    toast.error('Get Organization Fail !');
   }
 }
 
@@ -57,6 +57,7 @@ function* switchOrganizationSaga({ payload }: any) {
     yield AxiosClientInstance.setHeaderOrganization(payload.id);
     yield put(actionTypes.switchOrganizationSuccess(payload));
     payload.callback();
+    toast.success('Switch Organization !');
   } catch (error) {
     yield put(actionTypes.switchOrganizationFail(error));
   }
@@ -68,7 +69,6 @@ function* getOrganizationMemberSaga({ payload }: any) {
     yield put(actionTypes.getOrganizationMemberSuccess(data));
   } catch (error) {
     yield put(actionTypes.getOrganizationMemberFail(error));
-    toast.error('Get Organization Member Fail !');
   }
 }
 
@@ -76,11 +76,80 @@ function* getRoleOrganizationMemberSaga({ payload }: any) {
   try {
     const idOrganizations = CookieHandlerInstance.getCookie('current_organizations');
     yield AxiosClientInstance.setHeaderOrganization(idOrganizations);
-    const { data } = yield call(getRoleOrganizationService);
+    const { data } = yield call(getRoleOrganizationService, payload);
     yield put(actionTypes.getRoleOrganizationMemberSuccess(data));
-  } catch (error) {
+  } catch (error: any) {
     yield put(actionTypes.getRoleOrganizationMemberFail(error));
-    toast.error('Get Role Organization Member Fail !');
+    toast.error(error?.data?.detail || 'Get Role Organization Member Fail !');
+  }
+}
+
+function* inviteOrganizationMemberSaga({ payload }: any) {
+  try {
+    const idOrganizations = CookieHandlerInstance.getCookie('current_organizations');
+    yield AxiosClientInstance.setHeaderOrganization(idOrganizations);
+    yield call(inviteOrganizationMemberService, payload);
+    yield put(actionTypes.inviteOrganizationMemberSuccess(payload));
+    payload.callback();
+  } catch (error: any) {
+    yield put(actionTypes.inviteOrganizationMemberFail(error));
+    toast.error(error?.data?.user[0] || 'Invite Organization Member Fail !');
+    payload.callback();
+  }
+}
+
+function* getDetailOrganizationMemberSaga({ payload }: any) {
+  try {
+    const { data } = yield call(getDetailOrganizationMemberService, payload);
+    yield put(actionTypes.getDetailOrganizationMemberSuccess(data));
+  } catch (error: any) {
+    yield put(actionTypes.getDetailOrganizationMemberFail(error));
+    toast.error('Get Detail Organization Member Fail !');
+  }
+}
+
+function* deleteMemberOrganizationSaga({ payload }: any) {
+  const { currentOrganizations, organization, organizationMember, user } = payload;
+  const newOrganization = organization.filter((item: any) => item.id !== +currentOrganizations);
+  const isAdmin = organization.find((item: any) => item.created_by === user);
+  try {
+    yield call(deleteMemberOrganizationService, payload.id);
+
+    if (organization.length === 1 && organizationMember.length === 1 && isAdmin) {
+      return payload.callbackOrg();
+    }
+
+    if (organization.length > 1 && organizationMember.length > 1 && isAdmin) {
+      yield CookieHandlerInstance.setCookie('current_organizations', newOrganization[0].id);
+      yield AxiosClientInstance.setHeaderOrganization(newOrganization[0].id);
+      yield put(actionTypes.deleteMemberOrganizationSuccess({ payload, newOrganization }));
+    }
+
+    if (organizationMember.length === 1 && organization.length > 1 && isAdmin) {
+      yield CookieHandlerInstance.setCookie('current_organizations', newOrganization[0].id);
+      yield AxiosClientInstance.setHeaderOrganization(newOrganization[0].id);
+      yield put(
+        actionTypes.deleteMemberOrganizationSuccess({ payload, newOrganization })
+      );
+    }
+
+    payload.callback();
+    toast.success('Delete Organization Member Success !');
+  } catch (error: any) {
+    yield put(actionTypes.deleteMemberOrganizationFail(error));
+    toast.error(error?.data?.detail || 'Delete Organization Member Fail !');
+  }
+}
+
+function* updateMemberOrganizationSaga({ payload }: any) {
+  try {
+    yield call(updateMemberOrganizationService, payload);
+    yield put(actionTypes.updateMemberOrganizationSuccess(payload));
+    toast.error('Update Organization Member Success !');
+    payload.callback();
+  } catch (error: any) {
+    yield put(actionTypes.updateMemberOrganizationFail(error));
+    toast.error(error?.data?.detail || 'Update Organization Member Fail !');
   }
 }
 
@@ -90,4 +159,8 @@ export default function* watchApp() {
   yield takeLatest(types.SWITCH_ORGANIZATION_REQUEST, switchOrganizationSaga);
   yield takeLatest(types.GET_ORGANIZATION_MEMBER_REQUEST, getOrganizationMemberSaga);
   yield takeLatest(types.GET_ROLE_ORGANIZATION_MEMBER_REQUEST, getRoleOrganizationMemberSaga);
+  yield takeLatest(types.INVITE_ORGANIZATION_MEMBER_REQUEST, inviteOrganizationMemberSaga);
+  yield takeLatest(types.GET_DETAIL_ORGANIZATION_MEMBER_REQUEST, getDetailOrganizationMemberSaga);
+  yield takeLatest(types.DELETE_MEMBER_ORGANIZATION_REQUEST, deleteMemberOrganizationSaga);
+  yield takeLatest(types.UPDATE_MEMBER_ORGANIZATION_REQUEST, updateMemberOrganizationSaga);
 }

@@ -1,13 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { connect, useDispatch } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 // Mui
-import { Button, Grid, Typography, Container, Card } from '@mui/material';
-import { Add as AddIcon, PersonAddAlt as PersonAddAltIcon } from '@mui/icons-material';
-
+import { Button, Container, Card } from '@mui/material';
+import {
+  Add as AddIcon,
+  PersonAddAlt as PersonAddAltIcon,
+  ManageAccounts as ManageAccountsIcon,
+} from '@mui/icons-material';
+// Component
 import HeaderBreadcrumbs from 'src/components/HeaderBreadcrumbs';
 import { useInjectReducer } from 'src/utils/injectReducer';
 import { useInjectSaga } from 'src/utils/injectSaga';
@@ -16,9 +20,8 @@ import { usePagination } from 'src/hooks/usePagination';
 import Toolbar from 'src/containers/Certificates/components/Toolbar';
 import useSettings from 'src/hooks/useSettings';
 import Page from 'src/components/Page';
-
-import reducer from './store/reducers';
-import saga from './store/sagas';
+import cookie from 'src/utils/cookie';
+import { path } from 'src/constants/path';
 
 import {
   makeSelectIsLoadingOrganization,
@@ -27,9 +30,12 @@ import {
   makeSelectOrganizationMember,
   makeSelectRoleOrganizationMember,
 } from './store/selectors';
+import reducer from './store/reducers';
+import saga from './store/sagas';
 import { OrganizationType, OrganizationMemberType } from './interface';
 import { FILTER_OPTIONS, headersTable } from './constant';
 import { getOrganizationMemberRequest, getRoleOrganizationMemberRequest } from './store/actions';
+import InviteMember from './views/InviteMember';
 
 interface organizationType {
   isLoading: boolean;
@@ -50,7 +56,11 @@ const OrganizationContainer = ({
   useInjectSaga({ key: 'organization', saga });
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
-  console.log('roleUser', roleUser);
+  const navigate = useNavigate();
+
+  const [isOpenModalInvite, setIsOpenModalInvite] = useState<boolean>(false);
+  const currentOrganizations = cookie.getCookie('current_organizations');
+
   const {
     debouncedSearchTerm,
     page,
@@ -64,8 +74,10 @@ const OrganizationContainer = ({
   } = usePagination();
 
   const handleChangePageItem = (id: any) => {
-    console.log('id', id);
+    navigate(`/organization/${id}`, id);
   };
+
+  const handleToggleModal = () => setIsOpenModalInvite(!isOpenModalInvite);
 
   useEffect(() => {
     dispatch(
@@ -79,7 +91,14 @@ const OrganizationContainer = ({
   }, [dispatch, debouncedSearchTerm, filter, page, rowsPerPage]);
 
   useEffect(() => {
-    dispatch(getRoleOrganizationMemberRequest());
+    dispatch(
+      getRoleOrganizationMemberRequest({
+        page: 0,
+        rowsPerPage: 10,
+        search: '',
+        ordering: '',
+      })
+    );
   }, [dispatch]);
 
   return (
@@ -97,14 +116,28 @@ const OrganizationContainer = ({
                 <Button
                   variant="contained"
                   component={RouterLink}
-                  to={'/organization/new'}
+                  to={path.createOrganization}
                   startIcon={<AddIcon />}
                   sx={{ marginRight: 1 }}
                 >
                   Add Organization
                 </Button>
-                <Button variant="outlined" startIcon={<PersonAddAltIcon />}>
+                <Button
+                  variant="outlined"
+                  onClick={handleToggleModal}
+                  startIcon={<PersonAddAltIcon />}
+                  sx={{ marginRight: 1 }}
+                >
                   Invite Member
+                </Button>
+                <Button
+                  variant="contained"
+                  component={RouterLink}
+                  to={path.roleOrganization}
+                  startIcon={<ManageAccountsIcon />}
+                  sx={{ marginRight: 1 }}
+                >
+                  Manager Roles
                 </Button>
               </>
             }
@@ -132,7 +165,13 @@ const OrganizationContainer = ({
           </Card>
         </Container>
       </Page>
-      {/* <InviteMember openDialog={} /> */}
+      <InviteMember
+        openDialog={isOpenModalInvite}
+        handleToggleDialog={handleToggleModal}
+        rolesOrganizations={roleUser}
+        organization_id={currentOrganizations}
+        isLoading={isLoading}
+      />
     </>
   );
 };
@@ -151,6 +190,7 @@ const renderBodyTable = (data: any) =>
   data?.map((row: any) => ({
     id: row.id,
     name: row.name,
+    user: row.user,
     created_at: dayjs(row.created_at).format('DD/MM/YYYY'),
     updated_at: dayjs(row.updated_at).format('DD/MM/YYYY'),
   }));

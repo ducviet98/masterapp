@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { ParamsType } from 'src/containers/Devices/interface';
 import AxiosClientInstance from 'src/utils/axios';
 import { formatPage } from 'src/utils/formatPage';
 
@@ -17,6 +18,27 @@ export const getOrganizationMemberService = async (data: any) => {
   );
 };
 
-export const getRoleOrganizationService = async () => {
-  return await AxiosClientInstance.get(`/api/roles?limit=20&offset=0`);
+export const getRoleOrganizationService = async (data: ParamsType) => {
+  return await AxiosClientInstance.get(
+    `/api/roles?search=${data.search}&limit=${data.rowsPerPage}&offset=${formatPage(
+      data.rowsPerPage,
+      data.page
+    )}&ordering=${data.ordering}`
+  );
+};
+
+export const inviteOrganizationMemberService = async (data: any) => {
+  return await AxiosClientInstance.post(`/api/organization-member`, data);
+};
+
+export const getDetailOrganizationMemberService = async (id: number) => {
+  return await AxiosClientInstance.get(`/api/organization-member/${id}`);
+};
+
+export const deleteMemberOrganizationService = async (id: number) => {
+  return await AxiosClientInstance.delete(`/api/organization-member/${id}`);
+};
+
+export const updateMemberOrganizationService = async (data: any) => {
+  return await AxiosClientInstance.patch(`/api/organization-member/${data.id}`, data);
 };

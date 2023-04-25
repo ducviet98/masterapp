@@ -9,6 +9,7 @@ export const initialState = {
   error: '',
   organizationMember: [],
   roleUser: [],
+  detailOrganization: {},
 };
 
 const organizationReduce = (state = initialState, { type, payload }: any) =>
@@ -58,6 +59,39 @@ const organizationReduce = (state = initialState, { type, payload }: any) =>
         break;
       case types.GET_ROLE_ORGANIZATION_MEMBER_FAIL:
         draft.roleUser = [];
+        break;
+      case types.INVITE_ORGANIZATION_MEMBER_REQUEST:
+        draft.isLoading = true;
+        break;
+      case types.INVITE_ORGANIZATION_MEMBER_SUCCESS:
+        draft.isLoading = false;
+        break;
+      case types.INVITE_ORGANIZATION_MEMBER_FAIL:
+        draft.isLoading = false;
+        break;
+      case types.GET_DETAIL_ORGANIZATION_MEMBER_REQUEST:
+        draft.isLoading = true;
+        break;
+      case types.GET_DETAIL_ORGANIZATION_MEMBER_SUCCESS:
+        draft.isLoading = false;
+        draft.detailOrganization = payload;
+        break;
+      case types.GET_DETAIL_ORGANIZATION_MEMBER_FAIL:
+        draft.isLoading = false;
+        draft.detailOrganization = {};
+        break;
+      case types.UPDATE_MEMBER_ORGANIZATION_REQUEST:
+        draft.isLoading = true;
+        break;
+      case types.UPDATE_MEMBER_ORGANIZATION_SUCCESS:
+        draft.isLoading = false;
+        break;
+      case types.UPDATE_MEMBER_ORGANIZATION_FAIL:
+        draft.isLoading = false;
+        break;
+      case types.DELETE_MEMBER_ORGANIZATION_SUCCESS:
+        draft.isLoading = false;
+        draft.organizationData = payload.newOrganization;
         break;
       default:
         break;

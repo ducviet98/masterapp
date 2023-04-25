@@ -1,78 +1,80 @@
 /* eslint-disable camelcase */
-import { yupResolver } from '@hookform/resolvers/yup';
-import AppBar from '@mui/material/AppBar';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import Autocomplete from '@mui/material/Autocomplete';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import TextField from '@mui/material/TextField';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
+import { useMemo } from 'react';
+import { LoadingButton } from '@mui/lab';
 import { useDispatch } from 'react-redux';
-import _ from 'lodash';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+// Mui
+import { Grid, Dialog, Button, AppBar, Typography, Toolbar, Card, Box, Stack } from '@mui/material';
+import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
+// Component
+import { usePagination } from 'src/hooks/usePagination';
+import { FormProvider, RHFTextField } from 'src/components/hook-form';
+import RHFAutocomplete from 'src/components/hook-form/RHFAutocomplete';
 
-import { RoleType } from '../../interface';
-
-
-const schema = yup.object().shape({
-  email: yup
-    .string()
-    .required('You must enter an e-mail')
-    .email('You must enter a valid e-mail.'),
-  roles: yup.array().min(1, 'You must select role'),
-});
-
-interface InviteMemberType {
-  openDialog: boolean;
-  handleToggleDialog: () => void;
-  rolesOrganizations: [RoleType];
-  organization_id: string;
-  isLoading: boolean;
-}
+import { InviteMemberType } from '../../interface';
+import {
+  getRoleOrganizationMemberRequest,
+  inviteOrganizationMemberRequest,
+} from '../../store/actions';
+import { InviteMemberSchema } from '../../constant';
 
 function InviteMember(props: InviteMemberType) {
-  const {
-    openDialog,
-    handleToggleDialog,
-    rolesOrganizations,
-    organization_id,
-    isLoading,
-  } = props;
+  const { openDialog, handleToggleDialog, rolesOrganizations, organization_id, isLoading } = props;
   const dispatch = useDispatch();
-  const { handleSubmit, formState, control } = useForm({
-    mode: 'onChange',
-    defaultValues: {
+
+  const defaultValues = useMemo(
+    () => ({
       email: '',
-      roles: [],
-    },
-    resolver: yupResolver(schema),
+      role: '',
+    }),
+    []
+  );
+
+  const methods = useForm({
+    resolver: yupResolver(InviteMemberSchema),
+    defaultValues,
   });
 
-  const { isValid, dirtyFields, errors } = formState;
+  const { debouncedSearchTerm, page, rowsPerPage, search, filter, handleSearch, setSearch } =
+    usePagination();
 
-  function onSubmit(data: any) {
-    // dispatch(
-    //   inviteMemberOrganization({
-    //     ...data,
-    //     roles: data.roles.map((item) => item._id),
-    //     organization_id,
-    //     callback: () => {
-    //       handleToggleDialog();
-    //       dispatch(
-    //         getMemberOrganization({
-    //           id: organization_id,
-    //           page: 0,
-    //           rowsPerPage: 10,
-    //           search: '',
-    //         })
-    //       );
-    //     },
-    //   })
-    // );
-  }
+  const {
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = methods;
+
+  const onSubmit = async (values: any) => {
+    dispatch(
+      inviteOrganizationMemberRequest({
+        ...values,
+        user: values.email,
+        role: values.role.id,
+        callback: () => {
+          reset();
+          handleToggleDialog();
+        },
+      })
+    );
+  };
+
+  const handleScroll: React.EventHandler<React.UIEvent<HTMLUListElement>> = (event) => {
+    const listboxNode = event.currentTarget;
+
+    const position = listboxNode.scrollTop + listboxNode.clientHeight;
+
+    if (listboxNode.scrollHeight - position <= 1) {
+      dispatch(
+        getRoleOrganizationMemberRequest({
+          page,
+          rowsPerPage: rowsPerPage + 10,
+          search: debouncedSearchTerm,
+          ordering: filter,
+        })
+      );
+    }
+  };
 
   return (
     <Dialog
@@ -84,102 +86,65 @@ function InviteMember(props: InviteMemberType) {
         '& .MuiDialog-container': {
           '& .MuiPaper-root': {
             width: '100%',
-            minWidth: '400px',
+            minWidth: '300px',
           },
         },
       }}
     >
       <AppBar position="static" color="secondary" elevation={0}>
-        <Toolbar className="flex w-full">
+        <Toolbar>
           <Typography variant="subtitle1" color="inherit">
             Invite member
           </Typography>
         </Toolbar>
       </AppBar>
 
-      <form
-        noValidate
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col"
-      >
-        <DialogContent
-          classes={{ root: 'p-16 pb-0 sm:p-32 sm:pb-0 min-w-200' }}
-        >
-          <Controller
-            name="email"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                className="mt-8 mb-16"
-                label="To"
-                autoFocus
-                id="email"
-                error={!!errors.email}
-                helperText={errors?.email?.message}
-                variant="outlined"
-                fullWidth
-                required
-              />
-            )}
-          />
-
-          <Controller
-            name="roles"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <Autocomplete
-                className="mt-8 mb-16"
-                multiple
-                // name="roles"
-                options={rolesOrganizations}
-                value={value}
-                onChange={(event, newValue) => {
-                  onChange(newValue);
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={12}>
+            <Card sx={{ p: 3 }}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  columnGap: 2,
+                  rowGap: 3,
+                  gridTemplateColumns: {
+                    xs: 'repeat(1, 1fr)',
+                    sm: 'repeat(2, 1fr)',
+                  },
                 }}
-                getOptionLabel={(option) => option.name}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    placeholder="Select Roles"
-                    name="roles"
-                    label="Select Roles"
-                    variant="outlined"
-                    error={!!errors.roles}
-                    helperText={errors?.roles?.message}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />
-                )}
-              />
-            )}
-          />
-        </DialogContent>
+              >
+                <RHFTextField name="email" label="Email to" required />
+                <RHFAutocomplete
+                  valueSearch={search || ''}
+                  onChangeSearch={handleSearch}
+                  options={rolesOrganizations}
+                  name="role"
+                  error={errors.role?.message}
+                  helperText={errors.role?.message}
+                  getOptionLabel={(option: any) => option?.name || ''}
+                  label="Select roles "
+                  setSearch={setSearch}
+                  handleScroll={handleScroll}
+                />
+              </Box>
 
-        <DialogActions className="flex flex-col w-full sm:flex-row sm:items-center justify-between py-16 sm:py-24 px-24">
-          <div className="flex w-full items-center justify-end space-x-8 mt-16 sm:mt-0">
-            <Button
-              className=""
-              variant="outlined"
-              color="secondary"
-              onClick={handleToggleDialog}
-            >
-              Cancel
-            </Button>
-
-            <Button
-              className=""
-              variant="contained"
-              color="secondary"
-              type="submit"
-              disabled={_.isEmpty(dirtyFields) || !isValid || isLoading}
-            >
-              Send
-            </Button>
-          </div>
-        </DialogActions>
-      </form>
+              <Stack justifyContent="space-between" direction="row" sx={{ mt: 3 }}>
+                <Button
+                  variant="outlined"
+                  onClick={handleToggleDialog}
+                  startIcon={<ArrowBackIcon />}
+                >
+                  Cancel
+                </Button>
+                <LoadingButton loading={isLoading} type="submit" variant="contained">
+                  Create
+                </LoadingButton>
+              </Stack>
+            </Card>
+          </Grid>
+        </Grid>
+      </FormProvider>
     </Dialog>
   );
 }

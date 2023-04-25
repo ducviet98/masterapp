@@ -20,6 +20,9 @@ const makeSelectOrganizationMember = () =>
 const makeSelectRoleOrganizationMember = () =>
   createSelector(organizationState, (state) => state.roleUser);
 
+const makeSelectDetailOrganizationMember = () =>
+  createSelector(organizationState, (state) => state.detailOrganization);
+
 export {
   makeSelectIsLoadingOrganization,
   makeSelectErrorOrganization,
@@ -27,4 +30,5 @@ export {
   makeSelectOrganization,
   makeSelectOrganizationMember,
   makeSelectRoleOrganizationMember,
+  makeSelectDetailOrganizationMember,
 };

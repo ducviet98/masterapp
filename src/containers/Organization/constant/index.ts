@@ -1,3 +1,5 @@
+import * as yup from 'yup';
+
 export const headersTable = [
   {
     id: 'id',
@@ -6,6 +8,10 @@ export const headersTable = [
   {
     id: 'name',
     label: 'Name',
+  },
+  {
+    id: 'user',
+    label: 'User ID',
   },
   {
     id: 'created_at',
@@ -22,3 +28,7 @@ export const FILTER_OPTIONS = [
   'created_at',
   'updated_at',
 ];
+
+export const InviteMemberSchema = yup.object().shape({
+  email: yup.string().required('You must enter an e-mail').email('You must enter a valid e-mail.'),
+});
