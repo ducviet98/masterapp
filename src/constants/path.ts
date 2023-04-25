@@ -27,5 +27,6 @@ export const path = {
 
   createOrganization: '/organization/new',
   organization: '/organization',
-  editOrganization: '/organization/:id'
+  editOrganization: '/organization/:id',
+  roleOrganization: '/organization/roles',
 };

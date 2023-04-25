@@ -87,7 +87,11 @@ export default function Router() {
 
         { path: path.accessoryInfo, element: <AccessoryInfo /> },
         { path: path.newAccessoryInfo, element: <NewAccessoryInfo /> },
+
         { path: path.organization, element: <Organization /> },
+        { path: path.editOrganization, element: <EditMemberOrganization /> },
+        { path: path.roleOrganization, element: <RoleOrganization /> },
+
       ],
     },
     // page Error
@@ -145,3 +149,7 @@ const CreateOrganization = Loadable(
   lazy(() => import('src/containers/Organization/views/CreateOrganization'))
 );
 const Organization = Loadable(lazy(() => import('src/containers/Organization/index')));
+const EditMemberOrganization = Loadable(
+  lazy(() => import('src/containers/Organization/views/EditMemberOrganization'))
+);
+const RoleOrganization = Loadable(lazy(() => import('src/containers/Organization/views/OrganizationRole')))
