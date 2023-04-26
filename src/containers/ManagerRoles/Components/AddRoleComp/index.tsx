@@ -21,6 +21,8 @@ import {
   Autocomplete,
   TextField,
   Checkbox,
+  FormControlLabel,
+  FormControl,
 } from '@mui/material';
 import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
@@ -64,7 +66,7 @@ const AddRoleComp = ({ openDialog, handleToggleDialog }: addRoleType) => {
   const handleSelectAllPermission = (event: any) => {
     const checked = event.target.checked;
 
-    console.log('event', event)
+    console.log('event', event);
     setValue('all', checked);
     if (checked) {
       setValue('permissions', permissions, {
@@ -104,6 +106,14 @@ const AddRoleComp = ({ openDialog, handleToggleDialog }: addRoleType) => {
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
               <RHFTextField name="name" label="Name" sx={{ mb: 2 }} />
+              <FormControl>
+                <FormControlLabel
+                  label="Select All Permission"
+                  control={
+                    <Checkbox size="small" onChange={handleSelectAllPermission} name="all" />
+                  }
+                />
+              </FormControl>
               <RHFAutocomplete
                 multiple
                 options={permissions}
