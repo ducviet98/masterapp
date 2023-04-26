@@ -20,7 +20,7 @@ import {
 import { InviteMemberSchema } from '../../constant';
 
 function InviteMember(props: InviteMemberType) {
-  const { openDialog, handleToggleDialog, rolesOrganizations, organization_id, isLoading } = props;
+  const { openDialog, handleToggleDialog, rolesOrganizations, isLoading } = props;
   const dispatch = useDispatch();
 
   const defaultValues = useMemo(
@@ -49,8 +49,7 @@ function InviteMember(props: InviteMemberType) {
     dispatch(
       inviteOrganizationMemberRequest({
         ...values,
-        user: values.email,
-        role: values.role.id,
+        role_id: values.role.id,
         callback: () => {
           reset();
           handleToggleDialog();
@@ -102,19 +101,9 @@ function InviteMember(props: InviteMemberType) {
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={12}>
-            <Card sx={{ p: 3 }}>
-              <Box
-                sx={{
-                  display: 'grid',
-                  columnGap: 2,
-                  rowGap: 3,
-                  gridTemplateColumns: {
-                    xs: 'repeat(1, 1fr)',
-                    sm: 'repeat(2, 1fr)',
-                  },
-                }}
-              >
-                <RHFTextField name="email" label="Email to" required />
+            <Card sx={{ p: 1 }}>
+              <Stack direction="column" mt={3} width="100%">
+                <RHFTextField name="email" label="Email to" sx={{ mb: 1 }} required />
                 <RHFAutocomplete
                   valueSearch={search || ''}
                   onChangeSearch={handleSearch}
@@ -127,7 +116,7 @@ function InviteMember(props: InviteMemberType) {
                   setSearch={setSearch}
                   handleScroll={handleScroll}
                 />
-              </Box>
+              </Stack>
 
               <Stack justifyContent="space-between" direction="row" sx={{ mt: 3 }}>
                 <Button
@@ -138,7 +127,7 @@ function InviteMember(props: InviteMemberType) {
                   Cancel
                 </Button>
                 <LoadingButton loading={isLoading} type="submit" variant="contained">
-                  Create
+                  Send
                 </LoadingButton>
               </Stack>
             </Card>

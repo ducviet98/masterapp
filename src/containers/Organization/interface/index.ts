@@ -6,13 +6,14 @@ export interface OrganizationType {
   updated_at: string;
 }
 
-export interface OrganizationMemberType {
+export type OrganizationMemberType = {
   created_at: string;
+  email: string;
   id: number;
   role: number;
   updated_at: string;
   user: number;
-}
+};
 
 type IKey = {
   [key: number]: string;
@@ -31,7 +32,6 @@ export interface InviteMemberType {
   openDialog: boolean;
   handleToggleDialog: () => void;
   rolesOrganizations: RoleType[];
-  organization_id: string;
   isLoading: boolean;
 }
 
@@ -41,4 +41,5 @@ export interface detailOrganizationType {
   role: number;
   updated_at: string;
   user: number;
+  email: string;
 }

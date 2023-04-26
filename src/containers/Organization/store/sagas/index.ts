@@ -65,6 +65,8 @@ function* switchOrganizationSaga({ payload }: any) {
 
 function* getOrganizationMemberSaga({ payload }: any) {
   try {
+    const currentOrganizations = CookieHandlerInstance.getCookie('current_organizations');
+    AxiosClientInstance.setHeaderOrganization(currentOrganizations);
     const { data } = yield call(getOrganizationMemberService, payload);
     yield put(actionTypes.getOrganizationMemberSuccess(data));
   } catch (error) {
@@ -93,7 +95,7 @@ function* inviteOrganizationMemberSaga({ payload }: any) {
     payload.callback();
   } catch (error: any) {
     yield put(actionTypes.inviteOrganizationMemberFail(error));
-    toast.error(error?.data?.user[0] || 'Invite Organization Member Fail !');
+    toast.error(error?.data?.detail || 'Invite Organization Member Fail !');
     payload.callback();
   }
 }
@@ -109,9 +111,12 @@ function* getDetailOrganizationMemberSaga({ payload }: any) {
 }
 
 function* deleteMemberOrganizationSaga({ payload }: any) {
-  const { currentOrganizations, organization, organizationMember, user } = payload;
+  const { currentOrganizations, organization, organizationMember, userID, id } = payload;
   const newOrganization = organization.filter((item: any) => item.id !== +currentOrganizations);
-  const isAdmin = organization.find((item: any) => item.created_by === user);
+  const isAdmin = organization.find((item: any) => item.created_by === userID);
+
+  // yield Promise.all(payload.id.map((item: number) => deleteMemberOrganizationService(item)))
+
   try {
     yield call(deleteMemberOrganizationService, payload.id);
 
@@ -128,9 +133,7 @@ function* deleteMemberOrganizationSaga({ payload }: any) {
     if (organizationMember.length === 1 && organization.length > 1 && isAdmin) {
       yield CookieHandlerInstance.setCookie('current_organizations', newOrganization[0].id);
       yield AxiosClientInstance.setHeaderOrganization(newOrganization[0].id);
-      yield put(
-        actionTypes.deleteMemberOrganizationSuccess({ payload, newOrganization })
-      );
+      yield put(actionTypes.deleteMemberOrganizationSuccess({ payload, newOrganization }));
     }
 
     payload.callback();
