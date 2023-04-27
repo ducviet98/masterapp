@@ -36,7 +36,7 @@ import {
   makeSelectRoles,
 } from './store/selectors';
 import { deleteRoleRequest, getPermissionRequest, getRoleRequest } from './store/actions';
-import { IKey, IManagerRoles, RolesType } from './interface';
+import { IManagerRoles, RolesType } from './interface';
 import { FILTER_OPTIONS, headersTable } from './constants';
 import AddRoleComp from './Components/AddRoleComp';
 import Iconify from 'src/components/Iconify';
@@ -50,7 +50,6 @@ const ManagerRoles = ({ isLoading, total, permissions, roles }: IManagerRoles) =
   useInjectSaga({ key: 'managerRole', saga });
 
   const { themeStretch } = useSettings();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const {
@@ -67,24 +66,15 @@ const ManagerRoles = ({ isLoading, total, permissions, roles }: IManagerRoles) =
 
   const handleToggleModalAddRole = () => setIsOpenModalAddRole(!isOpenModalAddRole);
 
-  const { selectAllTable, selectItemTable, handleEdit, setSelectedItems, selectedItems } =
-    useHandleDataTable({
-      dataTable: roles,
-    });
+  const { selectAllTable, selectItemTable, setSelectedItems, selectedItems } = useHandleDataTable({
+    dataTable: roles,
+  });
 
   const handleDelete = (id?: number) => {
     dispatch(
       deleteRoleRequest({
         ids: id ? [id] : selectedItems,
         callback: () => {
-          dispatch(
-            getRoleRequest({
-              page: 0,
-              rowsPerPage: 10,
-              search: '',
-              ordering: '',
-            })
-          );
           setSelectedItems([]);
         },
       })

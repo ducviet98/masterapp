@@ -58,17 +58,7 @@ const AddRoleComp = ({ openDialog, handleToggleDialog, roleDetail }: IAddRole) =
         updateRoleRequest({
           ...values,
           id: roleDetail?.id,
-          // callback: () => {
-          //   dispatch(
-          //     getRoleRequest({
-          //       page: 0,
-          //       rowsPerPage: 10,
-          //       search: '',
-          //       ordering: '',
-          //     })
-          //   );
-          // },
-          callbackClear: () => {
+          callback: () => {
             handleToggleDialog();
             reset();
           },
@@ -78,17 +68,15 @@ const AddRoleComp = ({ openDialog, handleToggleDialog, roleDetail }: IAddRole) =
       dispatch(
         createRoleRequest({
           ...values,
-          // callback: () => {
-          //   dispatch(
-          //     getRoleRequest({
-          //       page: 0,
-          //       rowsPerPage: 10,
-          //       search: '',
-          //       ordering: '',
-          //     })
-          //   );
-          // },
-          callbackClear: () => {
+          callback: () => {
+            dispatch(
+              getRoleRequest({
+                page: 0,
+                rowsPerPage: 10,
+                search: '',
+                ordering: '',
+              })
+            );
             handleToggleDialog();
             reset();
           },
@@ -163,7 +151,7 @@ const AddRoleComp = ({ openDialog, handleToggleDialog, roleDetail }: IAddRole) =
         <Grid container spacing={3}>
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
-              <RHFTextField name="name" label="Name" sx={{ mb: 2 }} autoFocus/>
+              <RHFTextField name="name" label="Name" sx={{ mb: 2 }} autoFocus />
               <FormControl>
                 <FormControlLabel
                   label="Select All Permission"

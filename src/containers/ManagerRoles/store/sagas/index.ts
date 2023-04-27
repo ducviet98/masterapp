@@ -43,7 +43,6 @@ function* updateRoleSaga({ payload }: any) {
     yield call(updateRoleService, payload);
     yield put(actionTypes.updateRoleSuccess(payload));
     yield payload.callback();
-    yield payload.callbackClear();
     toast.success('Update Success !');
   } catch (error: any) {
     yield put(actionTypes.updateRoleFail(error));
@@ -52,10 +51,9 @@ function* updateRoleSaga({ payload }: any) {
 
 function* createRoleSaga({ payload }: any) {
   try {
-    // yield call(createRoleService, payload);
+    yield call(createRoleService, payload);
     yield put(actionTypes.createRoleSuccess(payload));
     yield payload.callback();
-    yield payload.callbackClear();
     toast.success('Create Role Success !');
   } catch (error: any) {
     yield put(actionTypes.createRoleFail(error));

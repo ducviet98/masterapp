@@ -46,6 +46,34 @@ const managerRoleReduce = (state = initialState, { type, payload }: any) =>
       case types.CREATE_ROLE_FAIL:
         draft.isLoading = false;
         break;
+      case types.UPDATE_ROLE_REQUEST:
+        draft.isLoading = true;
+        break;
+      case types.UPDATE_ROLE_SUCCESS:
+        draft.isLoading = false;
+        const newRoles: any = state.roles.map((item: any) =>
+          item.id === payload.id
+            ? { ...item, name: payload.name, permissions: payload.permissions }
+            : item
+        );
+        draft.roles = newRoles;
+        break;
+      case types.UPDATE_ROLE_FAIL:
+        draft.isLoading = false;
+        break;
+      case types.DELETE_ROLE_REQUEST:
+        draft.isLoading = true;
+        break;
+      case types.DELETE_ROLE_SUCCESS:
+        draft.isLoading = false;
+        const newDeleteRole: any = state.roles.filter(
+          (item: any) => !payload.ids.includes(item.id)
+        );
+        draft.roles = newDeleteRole;
+        break;
+      case types.DELETE_ROLE_FAIL:
+        draft.isLoading = false;
+        break;
       default:
         break;
     }
