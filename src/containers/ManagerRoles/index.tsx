@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 // Mui
 import {
@@ -43,15 +42,15 @@ import Iconify from 'src/components/Iconify';
 import { MenuAction } from '../Certificates/components/MenuAction';
 
 const ManagerRoles = ({ isLoading, total, permissions, roles }: IManagerRoles) => {
-  const [isOpenModalAddRole, setIsOpenModalAddRole] = useState<boolean>(false);
-  const [roleDetail, setRoleDetail] = useState<RolesType | null>(null);
-
   useInjectReducer({ key: 'managerRole', reducer });
   useInjectSaga({ key: 'managerRole', saga });
 
-  const { themeStretch } = useSettings();
-  const dispatch = useDispatch();
+  const [isOpenModalAddRole, setIsOpenModalAddRole] = useState<boolean>(false);
+  const [roleDetail, setRoleDetail] = useState<RolesType | null>(null);
 
+  const dispatch = useDispatch();
+  const { themeStretch } = useSettings();
+  
   const {
     debouncedSearchTerm,
     page,
