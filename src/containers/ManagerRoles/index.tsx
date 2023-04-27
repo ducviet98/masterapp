@@ -1,13 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 // Mui
-import { Button, Grid, Typography, Container, Stack, Box } from '@mui/material';
+import {
+  Button,
+  Typography,
+  Container,
+  Box,
+  Tooltip,
+  IconButton,
+  MenuItem,
+  Card,
+} from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 // Components
-
 import { useInjectReducer } from 'src/utils/injectReducer';
 import { useInjectSaga } from 'src/utils/injectSaga';
 import HeaderBreadcrumbs from 'src/components/HeaderBreadcrumbs';
@@ -16,23 +24,27 @@ import Page from 'src/components/Page';
 import useSettings from 'src/hooks/useSettings';
 import { usePagination } from 'src/hooks/usePagination';
 import Label from 'src/components/Label';
+import useHandleDataTable from 'src/hooks/useHandleTable';
+import Toolbar from 'src/containers/Certificates/components/Toolbar';
 
 import reducer from './store/reducers';
 import saga from './store/sagas';
 import {
   makeSelectIsLoadingManagerRole,
-  makeSelectErrorManagerRole,
   makeSelectTotalManagerRole,
   makeSelectPermission,
   makeSelectRoles,
 } from './store/selectors';
-import { getPermissionRequest, getRoleRequest } from './store/actions';
+import { deleteRoleRequest, getPermissionRequest, getRoleRequest } from './store/actions';
 import { ManagerRolesType, rolesType } from './interface';
-import { headersTable } from './constants';
+import { FILTER_OPTIONS, headersTable } from './constants';
 import AddRoleComp from './Components/AddRoleComp';
+import Iconify from 'src/components/Iconify';
+import { MenuAction } from '../Certificates/components/MenuAction';
 
 const ManagerRoles = ({ isLoading, total, permissions, roles }: ManagerRolesType) => {
   const [isOpenModalAddRole, setIsOpenModalAddRole] = useState<boolean>(false);
+  const [roleDetail, setRoleDetail] = useState<rolesType | null>(null);
 
   useInjectReducer({ key: 'managerRole', reducer });
   useInjectSaga({ key: 'managerRole', saga });
@@ -41,10 +53,64 @@ const ManagerRoles = ({ isLoading, total, permissions, roles }: ManagerRolesType
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { debouncedSearchTerm, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage } =
-    usePagination();
+  const {
+    debouncedSearchTerm,
+    page,
+    rowsPerPage,
+    search,
+    filter,
+    handleChangePage,
+    handleChangeRowsPerPage,
+    handleSearch,
+    handleFilter,
+  } = usePagination();
 
   const handleToggleModalAddRole = () => setIsOpenModalAddRole(!isOpenModalAddRole);
+
+  const { selectAllTable, selectItemTable, handleEdit, setSelectedItems, selectedItems } =
+    useHandleDataTable({
+      dataTable: roles,
+    });
+
+  const handleDeleteMulti = () => {
+    dispatch(
+      deleteRoleRequest({
+        ids: selectedItems,
+        callback: () => {
+          dispatch(
+            getRoleRequest({
+              page: 0,
+              rowsPerPage: 10,
+              search: '',
+              ordering: '',
+            })
+          );
+        },
+      })
+    );
+  };
+
+  const handleDelete = (id: number) => {
+    dispatch(
+      deleteRoleRequest({
+        ids: [id],
+        callback: () => {
+          dispatch(
+            getRoleRequest({
+              page: 0,
+              rowsPerPage: 10,
+              search: '',
+              ordering: '',
+            })
+          );
+        },
+      })
+    );
+  };
+
+  const handleOpenModalUpdate = (row: rolesType) => setRoleDetail(row);
+
+  const handleCloseRoleDetail = () => setRoleDetail(null);
 
   useEffect(() => {
     dispatch(getPermissionRequest());
@@ -53,30 +119,48 @@ const ManagerRoles = ({ isLoading, total, permissions, roles }: ManagerRolesType
   useEffect(() => {
     dispatch(
       getRoleRequest({
-        page: 10,
+        page,
+        rowsPerPage,
+        search: debouncedSearchTerm,
+        ordering: filter,
       })
     );
-  }, [dispatch]);
+  }, [dispatch, page, rowsPerPage, debouncedSearchTerm, filter]);
 
   return (
-    <Page title="MFI Token List">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <HeaderBreadcrumbs
-          heading="Manager Roles"
-          links={[
-            { name: 'Dashboard', href: '/' },
-            { name: 'Manager Roles', href: '/manager-role' },
-          ]}
-          action={
-            <Button variant="contained" onClick={handleToggleModalAddRole} startIcon={<AddIcon />}>
-              Add Roles
-            </Button>
-          }
-        />
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
+    <>
+      <Page title="MFI Token List">
+        <Container maxWidth={themeStretch ? false : 'lg'}>
+          <HeaderBreadcrumbs
+            heading="Manager Roles"
+            links={[
+              { name: 'Dashboard', href: '/' },
+              { name: 'Manager Roles', href: '/manager-role' },
+            ]}
+            action={
+              <Button
+                variant="contained"
+                onClick={handleToggleModalAddRole}
+                startIcon={<AddIcon />}
+              >
+                Add Roles
+              </Button>
+            }
+          />
+          <Card>
+            <Toolbar
+              search={search}
+              filter={filter}
+              onSearch={handleSearch}
+              onFilter={handleFilter}
+              optionsRole={FILTER_OPTIONS}
+            />
             <TableComp
-              rows={renderBodyTable(roles)}
+              selectItemTable={selectItemTable}
+              selectAllTable={selectAllTable}
+              selectedItems={selectedItems}
+              isSelect
+              rows={renderBodyTable(roles, handleDelete, handleOpenModalUpdate)}
               columns={headersTable}
               page={page}
               rowsPerPage={rowsPerPage}
@@ -84,12 +168,24 @@ const ManagerRoles = ({ isLoading, total, permissions, roles }: ManagerRolesType
               handleChangeRowsPerPage={handleChangeRowsPerPage}
               count={total}
               isLoading={isLoading}
+              actionSelect={
+                <Tooltip title="Delete">
+                  <IconButton color="primary" onClick={handleDeleteMulti}>
+                    <Iconify icon={'eva:trash-2-outline'} />
+                  </IconButton>
+                </Tooltip>
+              }
             />
-          </Grid>
-        </Grid>
-      </Container>
+          </Card>
+        </Container>
+      </Page>
       <AddRoleComp openDialog={isOpenModalAddRole} handleToggleDialog={handleToggleModalAddRole} />
-    </Page>
+      <AddRoleComp
+        openDialog={!!roleDetail?.id}
+        handleToggleDialog={handleCloseRoleDetail}
+        roleDetail={roleDetail}
+      />
+    </>
   );
 };
 
@@ -100,7 +196,13 @@ const mapStateToProps = createStructuredSelector({
   roles: makeSelectRoles(),
 });
 
-const renderBodyTable = (data: rolesType[]) =>
+export default connect(mapStateToProps)(ManagerRoles);
+
+const renderBodyTable = (
+  data: rolesType[],
+  handleDelete: (id: number) => void,
+  handleOpenModalUpdate: (row: rolesType) => void
+) =>
   data?.map((row: any) => ({
     id: row.id,
     name: (
@@ -117,9 +219,18 @@ const renderBodyTable = (data: rolesType[]) =>
         ))}
       </Box>
     ),
-
     created_at: dayjs(row?.created_at).format('MM-DD-YY h:mm A'),
     updated_at: dayjs(row?.updated_at).format('MM-DD-YY h:mm A'),
+    action: (
+      <MenuAction>
+        <MenuItem onClick={() => handleDelete(row?.id)} sx={{ color: 'error.main' }}>
+          <Iconify icon={'eva:trash-2-outline'} />
+          Delete
+        </MenuItem>
+        <MenuItem onClick={() => handleOpenModalUpdate(row)}>
+          <Iconify icon={'eva:edit-fill'} />
+          Update
+        </MenuItem>
+      </MenuAction>
+    ),
   }));
-
-export default connect(mapStateToProps)(ManagerRoles);

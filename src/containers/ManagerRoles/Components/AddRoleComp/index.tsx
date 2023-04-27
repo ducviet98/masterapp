@@ -1,10 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { useMemo } from 'react';
-import * as yup from 'yup';
-import { useDispatch } from 'react-redux';
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useMemo, useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 
 // Mui
@@ -15,10 +11,8 @@ import {
   Typography,
   Grid,
   Card,
-  Box,
   Stack,
   Button,
-  Autocomplete,
   TextField,
   Checkbox,
   FormControlLabel,
@@ -30,16 +24,17 @@ import { LoadingButton } from '@mui/lab';
 // Components
 import { FormProvider, RHFTextField } from 'src/components/hook-form';
 import RHFAutocomplete from 'src/components/hook-form/RHFAutocomplete';
-import { path } from 'src/constants/path';
-import { RHFMultiCheckbox } from 'src/hooks/RHFCheckbox';
 
 import { addRoleType, IKey } from '../../interface';
 import { makeSelectPermission, makeSelectIsLoadingManagerRole } from '../../store/selectors';
 import { AddRoleSchema } from '../../constants';
+import { createRoleRequest, getRoleRequest, updateRoleRequest } from '../../store/actions';
 
-const AddRoleComp = ({ openDialog, handleToggleDialog }: addRoleType) => {
+const AddRoleComp = ({ openDialog, handleToggleDialog, roleDetail }: addRoleType) => {
   const permissions: [IKey] = useSelector(makeSelectPermission());
   const isLoading: boolean = useSelector(makeSelectIsLoadingManagerRole());
+  const [isCheckAll, setIsCheckAll] = useState<boolean>(false);
+  const dispatch = useDispatch();
 
   const defaultValues = useMemo(
     () => ({
@@ -55,28 +50,91 @@ const AddRoleComp = ({ openDialog, handleToggleDialog }: addRoleType) => {
     defaultValues,
   });
 
-  const { reset, handleSubmit, setError, watch, setValue } = methods;
+  const { reset, handleSubmit, watch, setValue } = methods;
 
   const onSubmit = async (values: any) => {
-    console.log('values', values);
+    if (roleDetail?.id) {
+      dispatch(
+        updateRoleRequest({
+          ...values,
+          id: roleDetail?.id,
+          callback: () => {
+            dispatch(
+              getRoleRequest({
+                page: 0,
+                rowsPerPage: 10,
+                search: '',
+                ordering: '',
+              })
+            );
+          },
+          callbackClear: () => {
+            handleToggleDialog();
+            reset();
+          },
+        })
+      );
+    } else {
+      dispatch(
+        createRoleRequest({
+          ...values,
+          callback: () => {
+            dispatch(
+              getRoleRequest({
+                page: 0,
+                rowsPerPage: 10,
+                search: '',
+                ordering: '',
+              })
+            );
+          },
+          callbackClear: () => {
+            handleToggleDialog();
+            reset();
+          },
+        })
+      );
+    }
   };
 
   const all = watch('all');
 
   const handleSelectAllPermission = (event: any) => {
-    const checked = event.target.checked;
-
-    console.log('event', event);
+    const { checked } = event.target;
     setValue('all', checked);
     if (checked) {
+      setIsCheckAll(true);
       setValue('permissions', permissions, {
         shouldValidate: true,
         shouldDirty: true,
       });
     } else {
+      setIsCheckAll(false);
       setValue('permissions', [], { shouldValidate: true, shouldDirty: true });
     }
   };
+
+  const onClearAllValues = (event: any) => {
+    const { cancelable } = event;
+    if (cancelable) {
+      setIsCheckAll(false);
+    }
+  };
+
+  useEffect(() => {
+    if (all) {
+      setValue('permissions', permissions, { shouldValidate: true });
+    } else {
+      setValue('permissions', [], { shouldValidate: true });
+    }
+  }, [all, permissions, setValue]);
+
+  useEffect(() => {
+    reset({
+      name: roleDetail?.name,
+      permissions: roleDetail?.permissions,
+    });
+  }, [reset, roleDetail?.id, roleDetail?.name, roleDetail?.permissions]);
 
   return (
     <Dialog
@@ -94,7 +152,7 @@ const AddRoleComp = ({ openDialog, handleToggleDialog }: addRoleType) => {
       }}
     >
       <AppBar position="static" color="secondary" elevation={0}>
-        <Toolbar className="flex w-full">
+        <Toolbar>
           <Typography variant="subtitle1" color="inherit">
             New Role
           </Typography>
@@ -110,7 +168,12 @@ const AddRoleComp = ({ openDialog, handleToggleDialog }: addRoleType) => {
                 <FormControlLabel
                   label="Select All Permission"
                   control={
-                    <Checkbox size="small" onChange={handleSelectAllPermission} name="all" />
+                    <Checkbox
+                      size="small"
+                      onChange={handleSelectAllPermission}
+                      name="all"
+                      checked={isCheckAll}
+                    />
                   }
                 />
               </FormControl>
@@ -121,12 +184,12 @@ const AddRoleComp = ({ openDialog, handleToggleDialog }: addRoleType) => {
                 getOptionLabel={(option: any) => option || ''}
                 label="status"
                 renderInput={(params: any) => <TextField {...params} label="Select permissions" />}
+                onInputChange={onClearAllValues}
               />
               <Stack justifyContent="space-between" direction="row" sx={{ mt: 3 }}>
                 <Button
                   variant="outlined"
-                  component={RouterLink}
-                  to={path.device}
+                  onClick={handleToggleDialog}
                   startIcon={<ArrowBackIcon />}
                 >
                   Back
@@ -137,7 +200,7 @@ const AddRoleComp = ({ openDialog, handleToggleDialog }: addRoleType) => {
                   type="submit"
                   variant="contained"
                 >
-                  Send
+                  Create
                 </LoadingButton>
               </Stack>
             </Card>

@@ -37,6 +37,15 @@ const managerRoleReduce = (state = initialState, { type, payload }: any) =>
         draft.roles = [];
         draft.total = 0;
         break;
+      case types.CREATE_ROLE_REQUEST:
+        draft.isLoading = true;
+        break;
+      case types.CREATE_ROLE_SUCCESS:
+        draft.isLoading = false;
+        break;
+      case types.CREATE_ROLE_FAIL:
+        draft.isLoading = false;
+        break;
       default:
         break;
     }
