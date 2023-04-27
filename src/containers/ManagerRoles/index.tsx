@@ -176,7 +176,7 @@ const renderBodyTable = (
   handleDelete: (id: number) => void,
   handleOpenModalUpdate: (row: RolesType) => void
 ) =>
-  data?.map((row: any) => ({
+  data?.map((row: RolesType) => ({
     id: row.id,
     name: (
       <Typography variant="subtitle2" textAlign="center" noWrap>

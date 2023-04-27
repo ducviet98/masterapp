@@ -7,7 +7,7 @@ export type RolesType = {
   id: number;
   name: string;
   organization: number;
-  permissions: IKey;
+  permissions: string[];
   updated_at: string;
 };
 
