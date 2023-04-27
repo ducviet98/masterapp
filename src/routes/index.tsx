@@ -87,6 +87,8 @@ export default function Router() {
 
         { path: path.accessoryInfo, element: <AccessoryInfo /> },
         { path: path.newAccessoryInfo, element: <NewAccessoryInfo /> },
+
+        { path: path.managerRole, element: <ManagerRoles /> },
       ],
     },
     // page Error
@@ -143,3 +145,5 @@ const NotFound = Loadable(lazy(() => import('src/pages/Page404')));
 const CreateOrganization = Loadable(
   lazy(() => import('src/containers/Organization/views/CreateOrganization'))
 );
+
+const ManagerRoles = Loadable(lazy(() => import('src/containers/ManagerRoles')));

@@ -29,9 +29,10 @@ const navConfig = [
       { title: 'MFI Token', path: '/mfi-token', icon: ICONS.mfiToken },
       { title: 'MFI API', path: '/mfi-api', icon: ICONS.mfiApi },
       { title: 'Brand', path: '/brand', icon: ICONS.brands },
-      { title: 'Accessory Info', path: '/accessory-info', icon: ICONS.accessory }
+      { title: 'Accessory Info', path: '/accessory-info', icon: ICONS.accessory },
+      { title: 'Manager Roles', path: '/manager-role', },
     ],
-  }
+  },
 ];
 
 export default navConfig;
