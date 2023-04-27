@@ -52,7 +52,7 @@ function* updateRoleSaga({ payload }: any) {
 
 function* createRoleSaga({ payload }: any) {
   try {
-    yield call(createRoleService, payload);
+    // yield call(createRoleService, payload);
     yield put(actionTypes.createRoleSuccess(payload));
     yield payload.callback();
     yield payload.callbackClear();

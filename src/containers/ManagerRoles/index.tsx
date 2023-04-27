@@ -36,15 +36,15 @@ import {
   makeSelectRoles,
 } from './store/selectors';
 import { deleteRoleRequest, getPermissionRequest, getRoleRequest } from './store/actions';
-import { ManagerRolesType, rolesType } from './interface';
+import { IKey, IManagerRoles, RolesType } from './interface';
 import { FILTER_OPTIONS, headersTable } from './constants';
 import AddRoleComp from './Components/AddRoleComp';
 import Iconify from 'src/components/Iconify';
 import { MenuAction } from '../Certificates/components/MenuAction';
 
-const ManagerRoles = ({ isLoading, total, permissions, roles }: ManagerRolesType) => {
+const ManagerRoles = ({ isLoading, total, permissions, roles }: IManagerRoles) => {
   const [isOpenModalAddRole, setIsOpenModalAddRole] = useState<boolean>(false);
-  const [roleDetail, setRoleDetail] = useState<rolesType | null>(null);
+  const [roleDetail, setRoleDetail] = useState<RolesType | null>(null);
 
   useInjectReducer({ key: 'managerRole', reducer });
   useInjectSaga({ key: 'managerRole', saga });
@@ -72,10 +72,10 @@ const ManagerRoles = ({ isLoading, total, permissions, roles }: ManagerRolesType
       dataTable: roles,
     });
 
-  const handleDeleteMulti = () => {
+  const handleDelete = (id?: number) => {
     dispatch(
       deleteRoleRequest({
-        ids: selectedItems,
+        ids: id ? [id] : selectedItems,
         callback: () => {
           dispatch(
             getRoleRequest({
@@ -85,30 +85,13 @@ const ManagerRoles = ({ isLoading, total, permissions, roles }: ManagerRolesType
               ordering: '',
             })
           );
+          setSelectedItems([]);
         },
       })
     );
   };
 
-  const handleDelete = (id: number) => {
-    dispatch(
-      deleteRoleRequest({
-        ids: [id],
-        callback: () => {
-          dispatch(
-            getRoleRequest({
-              page: 0,
-              rowsPerPage: 10,
-              search: '',
-              ordering: '',
-            })
-          );
-        },
-      })
-    );
-  };
-
-  const handleOpenModalUpdate = (row: rolesType) => setRoleDetail(row);
+  const handleOpenModalUpdate = (row: RolesType) => setRoleDetail(row);
 
   const handleCloseRoleDetail = () => setRoleDetail(null);
 
@@ -170,7 +153,7 @@ const ManagerRoles = ({ isLoading, total, permissions, roles }: ManagerRolesType
               isLoading={isLoading}
               actionSelect={
                 <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleDeleteMulti}>
+                  <IconButton color="primary" onClick={() => handleDelete()}>
                     <Iconify icon={'eva:trash-2-outline'} />
                   </IconButton>
                 </Tooltip>
@@ -199,9 +182,9 @@ const mapStateToProps = createStructuredSelector({
 export default connect(mapStateToProps)(ManagerRoles);
 
 const renderBodyTable = (
-  data: rolesType[],
+  data: RolesType[],
   handleDelete: (id: number) => void,
-  handleOpenModalUpdate: (row: rolesType) => void
+  handleOpenModalUpdate: (row: RolesType) => void
 ) =>
   data?.map((row: any) => ({
     id: row.id,
@@ -212,7 +195,7 @@ const renderBodyTable = (
     ),
     permissions: (
       <Box sx={{ maxWidth: 1000, display: 'flex', flexWrap: 'wrap' }}>
-        {row?.permissions.map((item: any) => (
+        {row?.permissions.map((item: string) => (
           <Label key={item} color="success" sx={{ textTransform: 'capitalize', m: 0.5 }}>
             {item}
           </Label>

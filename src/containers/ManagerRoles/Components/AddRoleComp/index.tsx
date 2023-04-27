@@ -25,12 +25,12 @@ import { LoadingButton } from '@mui/lab';
 import { FormProvider, RHFTextField } from 'src/components/hook-form';
 import RHFAutocomplete from 'src/components/hook-form/RHFAutocomplete';
 
-import { addRoleType, IKey } from '../../interface';
+import { IAddRole, IKey } from '../../interface';
 import { makeSelectPermission, makeSelectIsLoadingManagerRole } from '../../store/selectors';
 import { AddRoleSchema } from '../../constants';
 import { createRoleRequest, getRoleRequest, updateRoleRequest } from '../../store/actions';
 
-const AddRoleComp = ({ openDialog, handleToggleDialog, roleDetail }: addRoleType) => {
+const AddRoleComp = ({ openDialog, handleToggleDialog, roleDetail }: IAddRole) => {
   const permissions: [IKey] = useSelector(makeSelectPermission());
   const isLoading: boolean = useSelector(makeSelectIsLoadingManagerRole());
   const [isCheckAll, setIsCheckAll] = useState<boolean>(false);
@@ -58,16 +58,16 @@ const AddRoleComp = ({ openDialog, handleToggleDialog, roleDetail }: addRoleType
         updateRoleRequest({
           ...values,
           id: roleDetail?.id,
-          callback: () => {
-            dispatch(
-              getRoleRequest({
-                page: 0,
-                rowsPerPage: 10,
-                search: '',
-                ordering: '',
-              })
-            );
-          },
+          // callback: () => {
+          //   dispatch(
+          //     getRoleRequest({
+          //       page: 0,
+          //       rowsPerPage: 10,
+          //       search: '',
+          //       ordering: '',
+          //     })
+          //   );
+          // },
           callbackClear: () => {
             handleToggleDialog();
             reset();
@@ -78,16 +78,16 @@ const AddRoleComp = ({ openDialog, handleToggleDialog, roleDetail }: addRoleType
       dispatch(
         createRoleRequest({
           ...values,
-          callback: () => {
-            dispatch(
-              getRoleRequest({
-                page: 0,
-                rowsPerPage: 10,
-                search: '',
-                ordering: '',
-              })
-            );
-          },
+          // callback: () => {
+          //   dispatch(
+          //     getRoleRequest({
+          //       page: 0,
+          //       rowsPerPage: 10,
+          //       search: '',
+          //       ordering: '',
+          //     })
+          //   );
+          // },
           callbackClear: () => {
             handleToggleDialog();
             reset();
@@ -114,7 +114,7 @@ const AddRoleComp = ({ openDialog, handleToggleDialog, roleDetail }: addRoleType
     }
   };
 
-  const onClearAllValues = (event: any) => {
+  const onClearAllValues = (event: React.SyntheticEvent<EventTarget>) => {
     const { cancelable } = event;
     if (cancelable) {
       setIsCheckAll(false);
@@ -163,7 +163,7 @@ const AddRoleComp = ({ openDialog, handleToggleDialog, roleDetail }: addRoleType
         <Grid container spacing={3}>
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
-              <RHFTextField name="name" label="Name" sx={{ mb: 2 }} />
+              <RHFTextField name="name" label="Name" sx={{ mb: 2 }} autoFocus/>
               <FormControl>
                 <FormControlLabel
                   label="Select All Permission"
@@ -181,7 +181,6 @@ const AddRoleComp = ({ openDialog, handleToggleDialog, roleDetail }: addRoleType
                 multiple
                 options={permissions}
                 name="permissions"
-                getOptionLabel={(option: any) => option || ''}
                 label="status"
                 renderInput={(params: any) => <TextField {...params} label="Select permissions" />}
                 onInputChange={onClearAllValues}

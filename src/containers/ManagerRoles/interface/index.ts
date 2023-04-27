@@ -2,7 +2,7 @@ export type IKey = {
   [key: string | number]: string;
 };
 
-export type rolesType = {
+export type RolesType = {
   created_at: string;
   id: number;
   name: string;
@@ -11,15 +11,15 @@ export type rolesType = {
   updated_at: string;
 };
 
-export interface ManagerRolesType {
+export interface IManagerRoles {
   isLoading: boolean;
   total: number;
   permissions: [IKey];
-  roles: rolesType[];
+  roles: RolesType[];
 }
 
-export interface addRoleType {
+export interface IAddRole {
   openDialog: boolean;
   handleToggleDialog: () => void;
-  roleDetail?: rolesType | null;
+  roleDetail?: RolesType | null;
 }

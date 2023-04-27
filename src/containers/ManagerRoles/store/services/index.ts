@@ -4,13 +4,15 @@ import { formatPage } from 'src/utils/formatPage';
 
 export const getPermissionService = async () => await AxiosClientInstance.get(`/api/permissions`);
 
-export const getRoleService = async (data: any) =>
-  await AxiosClientInstance.get(
-    `/api/roles?search=${data.search}&ordering=${data.ordering}&limit=${data.rowsPerPage}&offset=${formatPage(
-      data.rowsPerPage,
-      data.page
+export const getRoleService = async (data: any) => {
+  const { search, ordering, rowsPerPage, page } = data;
+  return await AxiosClientInstance.get(
+    `/api/roles?search=${search}&ordering=${ordering}&limit=${rowsPerPage}&offset=${formatPage(
+      rowsPerPage,
+      page
     )}`
   );
+};
 
 export const updateRoleService = async (data: any) => {
   return await AxiosClientInstance.patch(`/api/roles/${data.id}`, data);
