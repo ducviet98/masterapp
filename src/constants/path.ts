@@ -29,4 +29,6 @@ export const path = {
   organization: '/organization',
   editOrganization: '/organization/:id',
   roleOrganization: '/organization/roles',
+
+  managerRole: '/manager-role'
 };

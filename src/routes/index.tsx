@@ -90,6 +90,8 @@ export default function Router() {
         
         { path: path.organization, element: <Organization /> },
         { path: path.editOrganization, element: <EditMemberOrganization /> },
+
+        { path: path.managerRole, element: <ManagerRoles /> },
       ],
     },
     // page Error
@@ -150,3 +152,5 @@ const Organization = Loadable(lazy(() => import('src/containers/Organization/ind
 const EditMemberOrganization = Loadable(
   lazy(() => import('src/containers/Organization/views/EditMemberOrganization'))
 );
+
+const ManagerRoles = Loadable(lazy(() => import('src/containers/ManagerRoles')));

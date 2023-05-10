@@ -33,8 +33,9 @@ const navConfig = [
       { title: 'Accessory Info', path: '/accessory-info', icon: ICONS.accessory },
       { title: 'Organization', path: '/organization', icon: ICONS.organization },
       
+      { title: 'Manager Roles', path: '/manager-role', },
     ],
-  }
+  },
 ];
 
 export default navConfig;
