@@ -22,6 +22,10 @@ class AxiosClient {
         Accept: 'application/json',
       },
     });
+    if (CookieHandlerInstance.checkCookie('current_organizations')) {
+      this.setHeaderOrganization(CookieHandlerInstance.getCookie('current_organizations'));
+    }
+
     if (CookieHandlerInstance.checkCookie('token')) {
       this.setHeader(CookieHandlerInstance.getCookie('token'));
     }

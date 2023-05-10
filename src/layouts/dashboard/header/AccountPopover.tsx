@@ -130,7 +130,7 @@ const AccountPopover = (props: IProps) => {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Stack sx={{ p: 1 }}>
-          <MenuItem component={Link} to="/" onClick={handleClose} role="button">
+          <MenuItem component={Link} to="/organization" onClick={handleClose} role="button">
             <ListItemText primary="My Organizations" />
           </MenuItem>
 

@@ -26,6 +26,9 @@ export const path = {
   newAccessoryInfo: '/accessory-info/new',
 
   createOrganization: '/organization/new',
+  organization: '/organization',
+  editOrganization: '/organization/:id',
+  roleOrganization: '/organization/roles',
 
   managerRole: '/manager-role'
 };
