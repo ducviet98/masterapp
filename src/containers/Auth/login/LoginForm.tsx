@@ -67,6 +67,9 @@ function LoginForm({ isLoading }: IUserType) {
         callback: () => {
           navigate(path.home);
         },
+        callbackOrg: () => {
+          navigate('/organization/new');
+        }
       })
     );
   });

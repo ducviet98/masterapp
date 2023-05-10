@@ -24,4 +24,11 @@ export const path = {
 
   accessoryInfo: '/accessory-info',
   newAccessoryInfo: '/accessory-info/new',
+
+  createOrganization: '/organization/new',
+  organization: '/organization',
+  editOrganization: '/organization/:id',
+  roleOrganization: '/organization/roles',
+
+  managerRole: '/manager-role'
 };

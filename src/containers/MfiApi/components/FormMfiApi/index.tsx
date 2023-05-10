@@ -118,7 +118,7 @@ const FormMfiApi = ({ isEdit, oldData }: FormMfiApiType) => {
       });
     }
 
-  }, [oldData]);
+  }, [oldData, setDataApi]);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

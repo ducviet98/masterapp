@@ -6,7 +6,7 @@ type IKey = {
 }
 
 type IDataTable = {
-  [key: string]: string | number | IKey
+  [key: string]: string | number | IKey | string[]
 }
 
 const useHandleDataTable = ({ dataTable }: { dataTable: IDataTable[] }) => {
