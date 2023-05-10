@@ -151,7 +151,7 @@ const TableComp: FC<ITable> = ({
                     .fill(0)
                     .map((_, index) => {
                       return (
-                        <TableCell key={index} align={'left'}>
+                        <TableCell key={index} align={'center'}>
                           <Typography
                             width="100%"
                             component="div"
@@ -194,7 +194,7 @@ const TableComp: FC<ITable> = ({
                   {columns.map(({ id, textAlign, renderCell }, index) => (
                     <TableCell
                       key={index}
-                      align={textAlign || 'left'}
+                      align={textAlign || 'center'}
                       className={classes.contentTable}
                     >
                       {itemLoading?.includes(row.id) &&

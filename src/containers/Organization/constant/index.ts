@@ -2,12 +2,8 @@ import * as yup from 'yup';
 
 export const headersTable = [
   {
-    id: 'id',
-    label: 'ID',
-  },
-  {
-    id: 'name',
-    label: 'Name',
+    id: 'email',
+    label: 'Email',
   },
   {
     id: 'user',
@@ -21,10 +17,14 @@ export const headersTable = [
     id: 'updated_at',
     label: 'Updated at',
   },
+  {
+    id: 'action',
+    label: 'Action',
+  },
 ];
 
 export const FILTER_OPTIONS = [
-  'name',
+  'email',
   'created_at',
   'updated_at',
 ];

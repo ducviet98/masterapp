@@ -40,5 +40,5 @@ export const deleteMemberOrganizationService = async (id: number) => {
 };
 
 export const updateMemberOrganizationService = async (data: any) => {
-  return await AxiosClientInstance.patch(`/api/organization-member/${data.id}`, data);
+  return await AxiosClientInstance.put(`/api/organization-member/${data.id}`, data);
 };
