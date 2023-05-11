@@ -8,9 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 
-import {
-  FormProvider, RHFTextField
-} from 'src/components/hook-form';
+import { FormProvider, RHFTextField } from 'src/components/hook-form';
 import RHFAutocomplete from 'src/components/hook-form/RHFAutocomplete';
 import { path } from 'src/constants/path';
 import { getMfiTokenRequest } from 'src/containers/MfiToken/store/actions';
@@ -23,16 +21,21 @@ import { useInjectSaga } from 'src/utils/injectSaga';
 import { createAccessoryInfoRequest } from '../../store/actions';
 import { makeSelectIsLoadingAction } from '../../store/selectors';
 import { MFiTokenType } from 'src/containers/MfiToken/interfaces';
+import { CID_OPTIONS } from '../../constants';
 
 const schema = Yup.object().shape({
   name: Yup.string().required('Name is required'),
-  cid: Yup.number().min(0).max(10).required('CID is required').typeError('CID is required'),
-  mfi_token_id: Yup
-    .object()
+  cid: Yup.object()
     .shape({
       id: Yup.string(),
     })
-    .required('MFI token is required')
+    .required('CID is required')
+    .typeError('CID is required'),
+  mfi_token_id: Yup.object()
+    .shape({
+      id: Yup.string(),
+    })
+    .required('MFI token is required'),
 });
 
 const FormAccessoryInfo = () => {
@@ -42,23 +45,16 @@ const FormAccessoryInfo = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const mfiTokens: MFiTokenType[] = useSelector(makeSelectMfiToken())
-  const isLoadingAction: boolean = useSelector(makeSelectIsLoadingAction())
-  const {
-    debouncedSearchTerm,
-    page,
-    rowsPerPage,
-    search,
-    filter,
-    handleSearch,
-    setSearch
-  } = usePagination();
+  const mfiTokens: MFiTokenType[] = useSelector(makeSelectMfiToken());
+  const isLoadingAction: boolean = useSelector(makeSelectIsLoadingAction());
+  const { debouncedSearchTerm, page, rowsPerPage, search, filter, handleSearch, setSearch } =
+    usePagination();
 
   const defaultValues = useMemo(
     () => ({
       mfi_token_id: null,
-      cid: '',
-      name: ''
+      cid: null,
+      name: '',
     }),
     []
   );
@@ -75,41 +71,46 @@ const FormAccessoryInfo = () => {
   } = methods;
 
   const onSubmit = async (values: any) => {
-    dispatch(createAccessoryInfoRequest({
-      ...values,
-      mfi_token_id: values?.mfi_token_id?.id,
-      callback: () => {
-        reset();
-        navigate(path.accessoryInfo)
-      },
-    }))
-
+    dispatch(
+      createAccessoryInfoRequest({
+        ...values,
+        cid: values?.cid?.id,
+        mfi_token_id: values?.mfi_token_id?.id,
+        callback: () => {
+          reset();
+          navigate(path.accessoryInfo);
+        },
+      })
+    );
   };
 
   const handleScroll: React.EventHandler<React.UIEvent<HTMLUListElement>> = (event) => {
-
     const listboxNode = event.currentTarget;
 
     const position = listboxNode.scrollTop + listboxNode.clientHeight;
 
     if (listboxNode.scrollHeight - position <= 1) {
-      dispatch(getMfiTokenRequest({
-        page,
-        rowsPerPage: rowsPerPage + 10,
-        search: debouncedSearchTerm,
-        ordering: filter
-      }))
+      dispatch(
+        getMfiTokenRequest({
+          page,
+          rowsPerPage: rowsPerPage + 10,
+          search: debouncedSearchTerm,
+          ordering: filter,
+        })
+      );
     }
   };
 
   useEffect(() => {
-    dispatch(getMfiTokenRequest({
-      page,
-      rowsPerPage,
-      search: debouncedSearchTerm,
-      ordering: filter
-    }))
-  }, [dispatch, debouncedSearchTerm, filter, page, rowsPerPage])
+    dispatch(
+      getMfiTokenRequest({
+        page,
+        rowsPerPage,
+        search: debouncedSearchTerm,
+        ordering: filter,
+      })
+    );
+  }, [dispatch, debouncedSearchTerm, filter, page, rowsPerPage]);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -127,7 +128,17 @@ const FormAccessoryInfo = () => {
                 },
               }}
             >
-              <RHFTextField type="number" name="cid" label="CID" />
+              <RHFAutocomplete
+                valueSearch={search || ''}
+                onChangeSearch={handleSearch}
+                options={CID_OPTIONS}
+                name="cid"
+                error={errors.cid?.message}
+                helperText={errors.cid?.message}
+                getOptionLabel={(option: any) => option?.label || ''}
+                label="CID"
+                setSearch={setSearch}
+              />
               <RHFTextField name="name" label="Name" />
               <RHFAutocomplete
                 valueSearch={search || ''}
@@ -141,13 +152,8 @@ const FormAccessoryInfo = () => {
                 setSearch={setSearch}
                 handleScroll={handleScroll}
               />
-
             </Box>
-            <Stack
-              justifyContent="space-between"
-              direction="row"
-              sx={{ mt: 3 }}
-            >
+            <Stack justifyContent="space-between" direction="row" sx={{ mt: 3 }}>
               <Button
                 variant="outlined"
                 component={RouterLink}
@@ -156,7 +162,12 @@ const FormAccessoryInfo = () => {
               >
                 Back
               </Button>
-              <LoadingButton loading={isLoadingAction} disabled={isLoadingAction} type="submit" variant="contained">
+              <LoadingButton
+                loading={isLoadingAction}
+                disabled={isLoadingAction}
+                type="submit"
+                variant="contained"
+              >
                 Create
               </LoadingButton>
             </Stack>

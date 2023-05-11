@@ -7,9 +7,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
-import {
-  FormProvider, RHFTextField
-} from 'src/components/hook-form';
+import { FormProvider, RHFTextField } from 'src/components/hook-form';
 import RHFAutocomplete from 'src/components/hook-form/RHFAutocomplete';
 import { path } from 'src/constants/path';
 import { getCertificateRequest } from 'src/containers/Certificates/store/actions';
@@ -18,13 +16,11 @@ import reducerCertificates from 'src/containers/Certificates/store/reducer';
 import sagaCertificates from 'src/containers/Certificates/store/sagas';
 import reducerDevice from 'src/containers/Devices/store/reducer';
 import sagaDevice from 'src/containers/Devices/store/sagas';
-import { makeSelectCertificate } from 'src/containers/Certificates/store/selectors';
 import { makeSelectListDevice } from 'src/containers/Devices/store/selectors';
 import { usePagination } from 'src/hooks/usePagination';
 import { useInjectReducer } from 'src/utils/injectReducer';
 import { useInjectSaga } from 'src/utils/injectSaga';
 import { createMfiTokenRequest, editMfiTokenRequest } from '../../store/actions';
-import { CertificateType } from 'src/containers/Certificates/interfaces';
 import { MFiTokenType } from '../../interfaces';
 import { getUserDeviceRequest } from 'src/containers/Devices/store/actions';
 import { DeviceUser } from 'src/containers/Devices/interface';
@@ -37,7 +33,7 @@ type FormMfiTokenType = {
   isEdit: boolean;
   oldData?: MFiTokenType;
   idDevice?: string;
-}
+};
 
 const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
   useInjectReducer({ key: 'certificate', reducer: reducerCertificates });
@@ -49,23 +45,13 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const certificates: CertificateType[] = useSelector(makeSelectCertificate())
+  const listDevice: DeviceUser[] = useSelector(makeSelectListDevice());
 
-  const listDevice: DeviceUser[] = useSelector(makeSelectListDevice())
-
-  const {
-    rowsPerPage,
-    debouncedSearchTerm,
-    search,
-    handleSearch,
-    setSearch
-  } = usePagination();
-
+  const { rowsPerPage, debouncedSearchTerm, search, handleSearch, setSearch } = usePagination();
 
   const defaultValues = useMemo(
     () => ({
       name: '',
-      certificate_id: '',
       device: '',
     }),
     []
@@ -74,9 +60,8 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
   const defaultValuesEdit = useMemo(
     () => ({
       name: oldData?.name || '',
-      certificate_id: oldData?.certificate || '',
       device: oldData?.device || '',
-      request_id: oldData?.request_id || ''
+      request_id: oldData?.request_id || '',
     }),
     [oldData]
   );
@@ -86,25 +71,14 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
     defaultValues: isEdit ? defaultValuesEdit : defaultValues,
   });
 
-  const {
-    reset,
-    handleSubmit,
-    setError
-  } = methods;
+  const { reset, handleSubmit, setError } = methods;
 
   const onSubmit = async (values: any) => {
-    if (!values.certificate_id?.id) {
-      return setError('certificate_id', {
-        type: 'custom',
-        message: 'Certificate id is required',
-      })
-    }
-
     if (!values.device?.ppid) {
       return setError('ppid', {
         type: 'custom',
         message: 'ppid id is required',
-      })
+      });
     }
 
     if (isEdit) {
@@ -112,26 +86,24 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
         editMfiTokenRequest({
           ...values,
           idDevice,
-          certificate_id: values.certificate_id.id,
           device: values.device.ppid,
           callback: () => {
-            navigate(path.mfiToken)
+            navigate(path.mfiToken);
+          },
+        })
+      );
+    } else {
+      return dispatch(
+        createMfiTokenRequest({
+          ...values,
+          device: values.device.ppid,
+          callback: () => {
+            reset();
+            navigate(path.mfiToken);
           },
         })
       );
     }
-    else {
-      return dispatch(createMfiTokenRequest({
-        ...values,
-        certificate_id: values.certificate_id.id,
-        device: values.device.ppid,
-        callback: () => {
-          reset();
-          navigate(path.mfiToken)
-        },
-      }))
-    }
-
   };
 
   const handleScroll: React.EventHandler<React.UIEvent<HTMLUListElement>> = (event) => {
@@ -140,11 +112,13 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
     const position = listboxNode.scrollTop + listboxNode.clientHeight;
 
     if (listboxNode.scrollHeight - position <= 1) {
-      dispatch(getCertificateRequest({
-        page: 0,
-        rowsPerPage: rowsPerPage + 10,
-        search: debouncedSearchTerm,
-      }))
+      dispatch(
+        getCertificateRequest({
+          page: 0,
+          rowsPerPage: rowsPerPage + 10,
+          search: debouncedSearchTerm,
+        })
+      );
       dispatch(
         getUserDeviceRequest({
           page: 0,
@@ -156,12 +130,14 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
   };
 
   useEffect(() => {
-    dispatch(getCertificateRequest({
-      page: 0,
-      rowsPerPage: 6,
-      search: debouncedSearchTerm,
-    }))
-  }, [dispatch, debouncedSearchTerm])
+    dispatch(
+      getCertificateRequest({
+        page: 0,
+        rowsPerPage: 6,
+        search: debouncedSearchTerm,
+      })
+    );
+  }, [dispatch, debouncedSearchTerm]);
 
   useEffect(() => {
     dispatch(
@@ -171,7 +147,7 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
         search: debouncedSearchTerm,
       })
     );
-  }, [dispatch, debouncedSearchTerm])
+  }, [dispatch, debouncedSearchTerm]);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -193,16 +169,6 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
               <RHFAutocomplete
                 valueSearch={search || ''}
                 onChangeSearch={handleSearch}
-                options={certificates}
-                name="certificate_id"
-                getOptionLabel={(option: CertificateType) => option?.name || ''}
-                label="certificate_id"
-                setSearch={setSearch}
-                handleScroll={handleScroll}
-              />
-              <RHFAutocomplete
-                valueSearch={search || ''}
-                onChangeSearch={handleSearch}
                 options={listDevice}
                 name="device"
                 getOptionLabel={(option: DeviceUser) => option?.ppid || ''}
@@ -211,16 +177,9 @@ const FormMfiToken = ({ isEdit, oldData, idDevice }: FormMfiTokenType) => {
                 handleScroll={handleScroll}
               />
 
-              {
-                isEdit && <RHFTextField name="request_id" label="Request id" />
-              }
-
+              {isEdit && <RHFTextField name="request_id" label="Request id" />}
             </Box>
-            <Stack
-              justifyContent="space-between"
-              direction="row"
-              sx={{ mt: 3 }}
-            >
+            <Stack justifyContent="space-between" direction="row" sx={{ mt: 3 }}>
               <Button
                 variant="outlined"
                 component={RouterLink}
