@@ -29,8 +29,7 @@ const schema = Yup.object().shape({
     .shape({
       id: Yup.string(),
     })
-    .required('CID is required')
-    .typeError('CID is required'),
+    .required('CID is required'),
   mfi_token_id: Yup.object()
     .shape({
       id: Yup.string(),
@@ -129,15 +128,12 @@ const FormAccessoryInfo = () => {
               }}
             >
               <RHFAutocomplete
-                valueSearch={search || ''}
-                onChangeSearch={handleSearch}
                 options={CID_OPTIONS}
                 name="cid"
                 error={errors.cid?.message}
                 helperText={errors.cid?.message}
-                getOptionLabel={(option: any) => option?.label || ''}
+                getOptionLabel={(option: { label: string; id: number }) => option?.label || ''}
                 label="CID"
-                setSearch={setSearch}
               />
               <RHFTextField name="name" label="Name" />
               <RHFAutocomplete
