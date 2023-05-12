@@ -89,7 +89,7 @@ const TableComp: FC<ITable> = ({
             <TableCell
               key={column.id}
               sortDirection={orderBy === column.id ? order : false}
-              align={column.textAlign || 'right'}
+              align={column.textAlign || 'left'}
             >
               <TableSortLabel
                 className={cx({
@@ -175,7 +175,7 @@ const TableComp: FC<ITable> = ({
                   style={{ cursor: 'pointer' }}
                 >
                   {isSelect && (
-                    <TableCell padding="checkbox" className={classes.contentTable} align={'right'}>
+                    <TableCell padding="checkbox" className={classes.contentTable} align={'left'}>
                       <Checkbox
                         color="primary"
                         checked={checked || false}
@@ -186,7 +186,7 @@ const TableComp: FC<ITable> = ({
                   {columns.map(({ id, textAlign, renderCell }, index) => (
                     <TableCell
                       key={index}
-                      align={textAlign || 'right'}
+                      align={textAlign || 'left'}
                       className={classes.contentTable}
                     >
                       {itemLoading?.includes(row.id) &&
