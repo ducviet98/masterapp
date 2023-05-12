@@ -1,12 +1,18 @@
 /* eslint-disable */
 import {
-  Box, Checkbox, CircularProgress, Paper, Skeleton, TableBody,
+  Box,
+  Checkbox,
+  CircularProgress,
+  Paper,
+  Skeleton,
+  TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TablePagination,
   TableRow,
-  TableSortLabel, Typography
+  TableSortLabel,
+  Typography,
 } from '@mui/material';
 import MuiTable from '@mui/material/Table';
 import cx from 'clsx';
@@ -45,19 +51,15 @@ const TableComp: FC<ITable> = ({
     }
   };
 
-  const handleRequestSort = (
-    _: React.MouseEvent<unknown>,
-    property: string
-  ) => {
+  const handleRequestSort = (_: React.MouseEvent<unknown>, property: string) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
 
-  const createSortHandler =
-    (property: string) => (event: React.MouseEvent<unknown>) => {
-      handleRequestSort(event, property);
-    };
+  const createSortHandler = (property: string) => (event: React.MouseEvent<unknown>) => {
+    handleRequestSort(event, property);
+  };
 
   const handleClickItem = (id: string) => () => {
     if (onClickItem) {
@@ -87,7 +89,7 @@ const TableComp: FC<ITable> = ({
             <TableCell
               key={column.id}
               sortDirection={orderBy === column.id ? order : false}
-              align={column.textAlign || 'center'}
+              align={column.textAlign || 'left'}
             >
               <TableSortLabel
                 className={cx({
@@ -118,9 +120,7 @@ const TableComp: FC<ITable> = ({
                     {column.label}
                     {orderBy === column.id && (
                       <Box component="span">
-                        {order === 'desc'
-                          ? 'sorted descending'
-                          : 'sorted ascending'}
+                        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                       </Box>
                     )}
                   </>
@@ -138,35 +138,30 @@ const TableComp: FC<ITable> = ({
       <TableBody>
         {isLoading
           ? Array(3)
-            .fill(0)
-            .map((_, index) => {
-              return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                  {isSelect && (
-                    <TableCell padding="checkbox">
-                      <Checkbox color="primary" checked={false} />
-                    </TableCell>
-                  )}
-                  {Array(columns.length)
-                    .fill(0)
-                    .map((_, index) => {
-                      return (
-                        <TableCell key={index} align={'center'}>
-                          <Typography
-                            width="100%"
-                            component="div"
-                            variant="h6"
-                          >
-                            <Skeleton />
-                          </Typography>
-                        </TableCell>
-                      );
-                    })}
-                </TableRow>
-              );
-            })
-          : stableSort(rows, getComparator(order, orderBy))?.map(
-            (row: any, index: number) => {
+              .fill(0)
+              .map((_, index) => {
+                return (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                    {isSelect && (
+                      <TableCell padding="checkbox">
+                        <Checkbox color="primary" checked={false} />
+                      </TableCell>
+                    )}
+                    {Array(columns.length)
+                      .fill(0)
+                      .map((_, index) => {
+                        return (
+                          <TableCell key={index} align={'center'}>
+                            <Typography width="100%" component="div" variant="h6">
+                              <Skeleton />
+                            </Typography>
+                          </TableCell>
+                        );
+                      })}
+                  </TableRow>
+                );
+              })
+          : stableSort(rows, getComparator(order, orderBy))?.map((row: any, index: number) => {
               const checked = selectedItems?.includes(row.id) || false;
               return (
                 <TableRow
@@ -180,10 +175,7 @@ const TableComp: FC<ITable> = ({
                   style={{ cursor: 'pointer' }}
                 >
                   {isSelect && (
-                    <TableCell
-                      padding="checkbox"
-                      className={classes.contentTable}
-                    >
+                    <TableCell padding="checkbox" className={classes.contentTable} align={'left'}>
                       <Checkbox
                         color="primary"
                         checked={checked || false}
@@ -194,30 +186,30 @@ const TableComp: FC<ITable> = ({
                   {columns.map(({ id, textAlign, renderCell }, index) => (
                     <TableCell
                       key={index}
-                      align={textAlign || 'center'}
+                      align={textAlign || 'left'}
                       className={classes.contentTable}
                     >
                       {itemLoading?.includes(row.id) &&
-                        (id?.includes('actions') || id?.includes('select')) ? (
+                      (id?.includes('actions') || id?.includes('select')) ? (
                         <CircularProgress size="16px" />
                       ) : renderCell ? (
                         renderCell(
                           id === 'errors'
                             ? {
-                              errors: row[id],
-                              disable: itemLoading?.includes(row.id),
-                            }
+                                errors: row[id],
+                                disable: itemLoading?.includes(row.id),
+                              }
                             : {
-                              ...row[id],
-                              disable: itemLoading?.includes(row.id),
-                            }
+                                ...row[id],
+                                disable: itemLoading?.includes(row.id),
+                              }
                         )
                       ) : (
                         <Typography
                           variant="body2"
                           onClick={handleClickItem(row.id)}
                           style={{
-                            whiteSpace: 'nowrap'
+                            whiteSpace: 'nowrap',
                           }}
                         >
                           {row[id] || '—'}
@@ -227,8 +219,7 @@ const TableComp: FC<ITable> = ({
                   ))}
                 </TableRow>
               );
-            }
-          )}
+            })}
       </TableBody>
     );
   };
@@ -236,23 +227,21 @@ const TableComp: FC<ITable> = ({
   return (
     <Box width="100%">
       <Paper className={classes.wrapperPaper}>
-        <TableContainer className={classes.tableContainer} >
-          {
-            selectedItems.length > 0 && <TableSelectedActions
+        <TableContainer className={classes.tableContainer}>
+          {selectedItems.length > 0 && (
+            <TableSelectedActions
               numSelected={selectedItems.length}
               rowCount={rows.length}
               onSelectAllRows={selectAllTable}
               actions={actionSelect}
             />
-          }
+          )}
           <MuiTable sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
             {renderHeadTable()}
             {renderBodyTable()}
           </MuiTable>
         </TableContainer>
-        {rows?.length === 0 && !isLoading && (
-          <Box className={classes.wrapperNoData}>No Data</Box>
-        )}
+        {rows?.length === 0 && !isLoading && <Box className={classes.wrapperNoData}>No Data</Box>}
         {count ? (
           <TablePagination
             SelectProps={{

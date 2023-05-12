@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
+import QrCodeIcon from '@mui/icons-material/QrCode';
 // component
 import HeaderBreadcrumbs from 'src/components/HeaderBreadcrumbs';
 import Iconify from 'src/components/Iconify';
@@ -66,13 +67,11 @@ const AccessoryInfo = () => {
             sx={{
               color: '#212B36',
               fontWeight: '400',
-              ':hover': {
-                backgroundColor: 'transparent',
-              },
             }}
+            variant="outlined"
             onClick={handleToggleModal}
           >
-            {row.setup_payload}
+            <QrCodeIcon /> QR CODE
           </Button>
           <SetupPayload
             openDialog={openModal}
